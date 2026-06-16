@@ -34,7 +34,8 @@ export default async function handler(req, res) {
 
     if (!putRes.ok) {
       const ghErr = await putRes.json().catch(() => ({}))
-      return res.status(500).json({ error: `GitHub: ${ghErr.message || putRes.status}` })
+      const debugUrl = `repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/contents/${RECIPES_DIR}/${fileName}`
+      return res.status(500).json({ error: `GitHub ${putRes.status}: ${ghErr.message || '?'} | URL: ${debugUrl}` })
     }
     return res.status(201).json({ message: 'Saved', id: fileName })
   }
