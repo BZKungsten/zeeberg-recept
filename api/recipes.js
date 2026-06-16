@@ -27,9 +27,9 @@ export default async function handler(req, res) {
     if (!title || !finalContent) return res.status(400).json({ error: 'Missing fields' })
 
     const fileName = `${title.replace(/[^a-z0-9åäöÅÄÖ]/gi, '_')}.md`
-    const putRes = await githubApi(`${RECIPES_DIR}/${fileName}`, {
+    const putRes = await githubApi(`${RECIPES_DIR}/${encodeURIComponent(fileName)}`, {
       method: 'PUT',
-      body: JSON.stringify({ message: `Add recipe: ${fileName}`, content: encode(finalContent) })
+      body: JSON.stringify({ message: `Add recipe: ${fileName}`, content: encode(finalContent), branch: 'main' })
     })
 
     if (!putRes.ok) {
