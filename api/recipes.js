@@ -32,7 +32,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({ message: `Add recipe: ${fileName}`, content: encode(finalContent) })
     })
 
-    if (!putRes.ok) return res.status(500).json({ error: 'Failed to save' })
+    if (!putRes.ok) {
+      const ghErr = await putRes.json().catch(() => ({}))
+      return res.status(500).json({ error: `GitHub: ${ghErr.message || putRes.status}` })
+    }
     return res.status(201).json({ message: 'Saved', id: fileName })
   }
 
