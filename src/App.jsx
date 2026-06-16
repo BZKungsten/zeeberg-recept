@@ -52,6 +52,9 @@ function App() {
   const [editImageFile, setEditImageFile] = useState(null)
   const [editImagePreview, setEditImagePreview] = useState(null)
   const [editError, setEditError] = useState(null)
+  const [importUrl, setImportUrl] = useState('')
+  const [importLoading, setImportLoading] = useState(false)
+  const [importError, setImportError] = useState(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -145,6 +148,28 @@ function App() {
       }))
     } else if (cleanTag) {
       setFormData(prev => ({ ...prev, newCustomTag: '' }))
+    }
+  }
+
+  const handleImportUrl = async () => {
+    if (!importUrl.trim()) return
+    setImportLoading(true)
+    setImportError(null)
+    try {
+      const res = await fetch(`${API_BASE}/api/fetch-recipe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: importUrl.trim() })
+      })
+      const data = await res.json()
+      if (!res.ok) { setImportError(data.error || 'Något gick fel'); return }
+      setFormData(prev => ({ ...prev, name: data.title || prev.name, content: data.content || prev.content, photoUrl: data.image || prev.photoUrl }))
+      if (data.image) setImagePreview(data.image)
+      setImportUrl('')
+    } catch {
+      setImportError('Kunde inte hämta receptet.')
+    } finally {
+      setImportLoading(false)
     }
   }
 
@@ -549,10 +574,28 @@ function App() {
           <div className="w-full sm:max-w-xl bg-white rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-6 space-y-5 shadow-xl">
             <div className="flex justify-between items-center border-b pb-4">
               <h2 className="text-xl font-bold text-slate-900">Nytt Recept</h2>
-              <button type="button" onClick={() => { setShowAddForm(false); setImageFile(null); setImagePreview(null) }} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
+              <button type="button" onClick={() => { setShowAddForm(false); setImageFile(null); setImagePreview(null); setImportUrl(''); setImportError(null) }} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
             </div>
 
             {submitError && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{submitError}</div>}
+
+            <div className="p-4 bg-[#f0f5f0] rounded-2xl border border-[#9ab89a] space-y-2">
+              <p className="text-xs font-bold text-[#4a6e4a] uppercase tracking-wider">Hämta från recept-sajt</p>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={importUrl}
+                  onChange={e => setImportUrl(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleImportUrl())}
+                  placeholder="Klistra in URL från Köket.se, ICA, Arla..."
+                  className="flex-1 p-2.5 text-sm rounded-xl border border-[#9ab89a] bg-white outline-none focus:ring-2 focus:ring-[#6B8C6B]"
+                />
+                <button type="button" onClick={handleImportUrl} disabled={importLoading || !importUrl.trim()} className="px-4 py-2 bg-[#6B8C6B] text-white rounded-xl text-sm font-semibold hover:bg-[#5a7a5a] disabled:opacity-50 transition-colors whitespace-nowrap">
+                  {importLoading ? '...' : 'Hämta'}
+                </button>
+              </div>
+              {importError && <p className="text-xs text-red-600">{importError}</p>}
+            </div>
 
             <form onSubmit={handleAddRecipe} className="space-y-4">
               <div>
