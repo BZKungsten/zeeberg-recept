@@ -222,7 +222,10 @@ function App() {
         })
       })
 
-      if (!response.ok) throw new Error('Kunde inte spara filen')
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}))
+        throw new Error(err.error || `Serverfel ${response.status}`)
+      }
 
       setFormData({ name: '', socialUrl: '', photoUrl: '', tags: [], content: '', newCustomTag: '' })
       setImageFile(null)
@@ -231,7 +234,7 @@ function App() {
       fetchRecipes()
     } catch (error) {
       console.error(error)
-      setSubmitError('Kunde inte spara receptet. Kontrollera att backend körs.')
+      setSubmitError(error.message || 'Kunde inte spara receptet.')
     } finally {
       setSubmitting(false)
     }
