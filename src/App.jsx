@@ -71,7 +71,7 @@ function App() {
 
       const processedRecipes = data.map((file, index) => {
         // Extrahera hashtaggar (både #Tag och de som lagts till i filen)
-        const hashtags = (file.content.match(/#\w+/g) || [])
+        const hashtags = (file.content.match(/#[\wÅÄÖåäö]+/g) || [])
           .map(tag => tag.substring(1))
           .filter((tag, idx, self) => self.indexOf(tag) === idx)
 
@@ -88,7 +88,7 @@ function App() {
         const cleanContent = file.content
           .replace(/!\[.*?\]\((.*?)\)/g, '') // Ta bort bilder
           .replace(/\[Källa:.*?\]/g, '')     // Ta bort källor
-          .replace(/#\w+/g, '')              // Ta bort taggar
+          .replace(/#[\wÅÄÖåäö]+/g, '')
           .trim()
 
         return {
@@ -493,7 +493,7 @@ function App() {
                       setEditTitle(selectedRecipe.name)
                       setEditContent(selectedRecipe.fullContent
                         .replace(/!\[.*?\]\(.*?\)\n\n?/, '')
-                        .replace(/\s*\n\n(#\w+ *)+$/, '')
+                        .replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '')
                         .trim())
                       setEditTags([...selectedRecipe.tags])
                       setEditImageUrl(imageMatch ? imageMatch[1] : null)
@@ -579,7 +579,7 @@ function App() {
                   </div>
                 </>
               ) : (
-                <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/, '').replace(/\s*\n\n(#\w+ *)+$/, '').trim()}</div>
+                <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
               )}
             </div>
           </div>
