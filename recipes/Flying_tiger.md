@@ -28,4 +28,4 @@ Tillsätt honung, fisksås, tamarind, lime och chili. Rör ihop till en jämn sm
 Tillsätt till sist rispulvet och tunna ut såsen med vatten till lagom konsistens. Smaka av med ev mer lime el fisksås.
 Servera...
 
-#Kött
+#Kött #Asiatisk
