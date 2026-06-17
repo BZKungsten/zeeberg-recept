@@ -28,3 +28,5 @@ Instruktioner:
 5. Lägg sparrisarna på en skärbräda. Skär stjälkarna på snedden i mindre bitar. Blanda dem med vinägretten.
 6. Grilla baconet och skär det sedan i bitar.
 7. Till garnering: Lägg upp sparrisarna och toppa med baconet och finriv parmesanost över precis innan servering. Garnera med bladpersilja.
+
+#Kött #Sallad
