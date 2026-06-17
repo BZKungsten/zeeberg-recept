@@ -2,6 +2,4 @@
 
 Panko mozzarella
 Chèvre rödbetor
-Jalapenos sås
-
-#Vegetariskt #Sallad
+Jalapenos sås #Sallad
