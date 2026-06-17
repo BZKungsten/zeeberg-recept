@@ -461,8 +461,8 @@ function App() {
       {/* Detaljmodal för ett recept */}
       {selectedRecipe && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center sm:justify-center animate-fade-in">
-          <div className="w-full h-[92vh] sm:h-auto sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl overflow-y-auto shadow-xl">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+          <div className="w-full h-[92vh] sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col shadow-xl">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
               {isEditing
                 ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} className="text-xl font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
                 : <h2 className="text-xl font-bold text-slate-900">{selectedRecipe.name}</h2>
@@ -495,16 +495,16 @@ function App() {
                 )}
               </div>
             </div>
-            {confirmDelete && !isEditing && (
-              <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
-                <p className="text-sm text-red-700 font-medium">Radera "{selectedRecipe.name}"?</p>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => setConfirmDelete(false)} className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 rounded-xl">Avbryt</button>
-                  <button onClick={() => handleDeleteRecipe(selectedRecipe)} className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-xl">Ja, radera</button>
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {confirmDelete && !isEditing && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
+                  <p className="text-sm text-red-700 font-medium">Radera "{selectedRecipe.name}"?</p>
+                  <div className="flex gap-2 shrink-0">
+                    <button onClick={() => setConfirmDelete(false)} className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 rounded-xl">Avbryt</button>
+                    <button onClick={() => handleDeleteRecipe(selectedRecipe)} className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-xl">Ja, radera</button>
+                  </div>
                 </div>
-              </div>
-            )}
-            <div className="p-6 space-y-4">
+              )}
               {editImagePreview || editImageUrl || (!isEditing && selectedRecipe.image) ? (
                 <div className="relative w-full">
                   <img
