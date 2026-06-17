@@ -1,4 +1,4 @@
-![Receptbild](https://images.mathem.se/prod/oppskrifter/1bb910a4-703e-41a1-bdab-441b003eb55c.jpg?fit=bounds&amp;format=auto&amp;optimize=medium&amp;quality=75&amp;width=2000&amp;s=0x8b4f9a1656c2e6af5e5330de2e7c4229aa90fb1e)
+![Receptbild](../RecipeImages/1781691166418.jpg)
 
 Hel grillad lax med en otroligt god glaze med ingefära och miso serveras med en frisk och god mangosallad. Somrigt, vackert och gott!
 
