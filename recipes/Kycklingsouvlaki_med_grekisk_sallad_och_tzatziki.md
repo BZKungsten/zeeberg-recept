@@ -38,6 +38,4 @@ Till servering
 
 Pitabröd eller grillat lantbröd
 Citronklyftor
-Färsk basilika, persilja eller oregano
-
-#Kyckling #Sallad
+Färsk basilika, persilja eller oregano #Sallad
