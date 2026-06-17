@@ -27,5 +27,3 @@ Ingredienser:
 - 2 msk rostade sesamfrön
 
 Instruktioner:
-
-#Middag
