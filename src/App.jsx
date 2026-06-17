@@ -254,6 +254,7 @@ function App() {
   const handleDeleteCategory = async (tag) => {
     setCategories(prev => prev.filter(c => c !== tag))
     setSelectedTags(prev => prev.filter(t => t !== tag))
+    setRecipes(prev => prev.map(r => ({ ...r, tags: r.tags.filter(t => t !== tag) })))
     fetch(`${API_BASE}/api/categories/${encodeURIComponent(tag)}`, { method: 'DELETE' })
       .then(() => fetchRecipes())
       .catch(() => {})
