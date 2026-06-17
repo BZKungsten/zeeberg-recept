@@ -24,8 +24,6 @@ const fileToBase64 = (file) => new Promise((resolve, reject) => {
   reader.readAsDataURL(file)
 })
 
-// 1. Hårdkodade standardkategorier så att de alltid finns tillgängliga direkt
-const DEFAULT_CATEGORIES = ['Båtlunch', 'Tea', 'Soppa', 'Middag', 'Frukost']
 
 function App() {
   const [activeTab, setActiveTab] = useState('recipes')
@@ -40,8 +38,7 @@ function App() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
-  const [customTags, setCustomTags] = useState([])
-  const [hiddenTags, setHiddenTags] = useState([])
+  const [categories, setCategories] = useState([])
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [editContent, setEditContent] = useState('')
@@ -115,16 +112,15 @@ function App() {
 
   useEffect(() => {
     fetchRecipes()
-    fetch(`${API_BASE}/api/hidden-tags`)
+    fetch(`${API_BASE}/api/categories`)
       .then(r => r.json())
-      .then(data => setHiddenTags(data))
+      .then(data => Array.isArray(data) && setCategories(data))
       .catch(() => {})
   }, [])
 
-  // Slå ihop standardkategorier med eventuella unika taggar som användaren har skapat
   const allTags = Array.from(
-    new Set([...DEFAULT_CATEGORIES, ...customTags, ...recipes.flatMap(r => r.tags)])
-  ).filter(t => !hiddenTags.includes(t)).sort()
+    new Set([...categories, ...recipes.flatMap(r => r.tags)])
+  ).sort()
 
   const getTagColor = () => 'bg-[#f0f5f0] text-[#4a6e4a] border border-[#9ab89a]'
 
@@ -138,18 +134,20 @@ function App() {
   const handleAddCustomTag = (e) => {
     e.preventDefault()
     const cleanTag = formData.newCustomTag.trim().replace(/\s+/g, '_')
-    if (cleanTag && !allTags.includes(cleanTag)) {
-      setCustomTags(prev => [...prev, cleanTag])
+    if (!cleanTag) return
+    if (!allTags.includes(cleanTag)) {
+      setCategories(prev => [...prev, cleanTag].sort())
+      fetch(`${API_BASE}/api/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: cleanTag })
+      }).catch(() => {})
     }
-    if (cleanTag && !formData.tags.includes(cleanTag)) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, cleanTag],
-        newCustomTag: ''
-      }))
-    } else if (cleanTag) {
-      setFormData(prev => ({ ...prev, newCustomTag: '' }))
-    }
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.includes(cleanTag) ? prev.tags : [...prev.tags, cleanTag],
+      newCustomTag: ''
+    }))
   }
 
   const handleImportUrl = async () => {
@@ -241,10 +239,24 @@ function App() {
     }
   }
 
+  const addCategory = async () => {
+    const t = newCategoryInput.trim().replace(/\s+/g, '_')
+    if (!t || allTags.includes(t)) { setNewCategoryInput(''); return }
+    setCategories(prev => [...prev, t].sort())
+    setNewCategoryInput('')
+    fetch(`${API_BASE}/api/categories`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: t })
+    }).catch(() => {})
+  }
+
   const handleDeleteCategory = async (tag) => {
-    setHiddenTags(prev => [...prev, tag])
+    setCategories(prev => prev.filter(c => c !== tag))
     setSelectedTags(prev => prev.filter(t => t !== tag))
-    fetch(`${API_BASE}/api/categories/${encodeURIComponent(tag)}`, { method: 'DELETE' }).catch(() => {})
+    fetch(`${API_BASE}/api/categories/${encodeURIComponent(tag)}`, { method: 'DELETE' })
+      .then(() => fetchRecipes())
+      .catch(() => {})
   }
 
   const handleSaveEdit = async () => {
@@ -389,23 +401,13 @@ function App() {
               type="text"
               value={newCategoryInput}
               onChange={e => setNewCategoryInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  const t = newCategoryInput.trim().replace(/\s+/g, '_')
-                  if (t && !allTags.includes(t)) { setCustomTags(prev => [...prev, t]) }
-                  setNewCategoryInput('')
-                }
-              }}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCategory() } }}
               placeholder="Ny kategori..."
               className="flex-1 p-3 rounded-2xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#6B8C6B] text-sm"
             />
             <button
               type="button"
-              onClick={() => {
-                const t = newCategoryInput.trim().replace(/\s+/g, '_')
-                if (t && !allTags.includes(t)) { setCustomTags(prev => [...prev, t]) }
-                setNewCategoryInput('')
-              }}
+              onClick={addCategory}
               className="px-4 py-3 bg-[#6B8C6B] text-white rounded-2xl font-semibold text-sm hover:bg-[#5a7a5a] transition-colors"
             >
               Lägg till
@@ -564,11 +566,13 @@ function App() {
                       <input type="text" value={editCustomTag} onChange={e => setEditCustomTag(e.target.value)} placeholder="Ny tagg..." className="flex-1 p-2 text-xs rounded-xl border border-slate-200 outline-none" />
                       <button type="button" onClick={() => {
                         const t = editCustomTag.trim().replace(/\s+/g, '_')
-                        if (t) {
-                          if (!allTags.includes(t)) setCustomTags(prev => [...prev, t])
-                          if (!editTags.includes(t)) setEditTags(prev => [...prev, t])
-                          setEditCustomTag('')
+                        if (!t) return
+                        if (!allTags.includes(t)) {
+                          setCategories(prev => [...prev, t].sort())
+                          fetch(`${API_BASE}/api/categories`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: t }) }).catch(() => {})
                         }
+                        if (!editTags.includes(t)) setEditTags(prev => [...prev, t])
+                        setEditCustomTag('')
                       }} className="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold">Lägg till</button>
                     </div>
                   </div>
