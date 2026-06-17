@@ -52,6 +52,7 @@ function App() {
   const [editImageFile, setEditImageFile] = useState(null)
   const [editImagePreview, setEditImagePreview] = useState(null)
   const [editError, setEditError] = useState(null)
+  const [confirmDeleteCategory, setConfirmDeleteCategory] = useState(null)
   const [importUrl, setImportUrl] = useState('')
   const [importLoading, setImportLoading] = useState(false)
   const [importError, setImportError] = useState(null)
@@ -410,6 +411,15 @@ function App() {
               Lägg till
             </button>
           </div>
+          {confirmDeleteCategory && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
+              <p className="text-sm text-red-700 font-medium">Ta bort kategorin "#{confirmDeleteCategory}"?</p>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => setConfirmDeleteCategory(null)} className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 rounded-xl">Avbryt</button>
+                <button onClick={() => { handleDeleteCategory(confirmDeleteCategory); setConfirmDeleteCategory(null) }} className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-xl">Ja, ta bort</button>
+              </div>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2.5 mb-8">
             {allTags.map((tag) => {
               const isActive = selectedTags.includes(tag)
@@ -424,7 +434,7 @@ function App() {
                     <span className="text-xs opacity-60">({count})</span>
                   </button>
                   <button
-                    onClick={() => handleDeleteCategory(tag)}
+                    onClick={() => setConfirmDeleteCategory(tag)}
                     className={`pr-3 pl-1 py-3 transition-colors ${isActive ? 'text-[#b8cbb8] hover:text-white' : 'text-slate-300 hover:text-red-400'}`}
                   >
                     <X size={14} />
