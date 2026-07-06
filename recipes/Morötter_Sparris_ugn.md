@@ -6,4 +6,4 @@ Olivolja
 Salt
 x
 
-#Vegetariskt
+#Vegetariskt #Tillbehör
