@@ -20,4 +20,4 @@ Blanda avokado, cocktailtomater, rödlök och örter i en skål.
 Lägg avokadoblandningen på varje rostad sötpotatissskiva och strö över fetaost.
 Ringla över balsamicosirap, salta och peppra lätt och servera.
 
-#Vegetariskt
+#Vegetariskt #Tillbehör
