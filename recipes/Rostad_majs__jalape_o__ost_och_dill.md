@@ -1,7 +1,5 @@
 ![Receptbild](../RecipeImages/1783329810276.jpg)
 
-
-
 	1.	Bild lägg grynen till matgröten dagen innan.
 	2.	Koka upp vattnet och osten/oskalat. Låt sjuda tills vätskan reducerats till hälften.
 	3.	Sätt ugnen på 200 °C eller förbered en grill.
