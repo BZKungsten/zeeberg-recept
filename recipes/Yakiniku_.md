@@ -28,4 +28,4 @@ Ingredienser:
 
 Instruktioner:
 
-#Kött
+#Kött #Asiatisk
