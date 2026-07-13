@@ -4,15 +4,15 @@ import './App.css'
 
 const API_BASE = ''
 
-const GITHUB_RAW_BASE = import.meta.env.VITE_GITHUB_OWNER
-  ? `https://raw.githubusercontent.com/${import.meta.env.VITE_GITHUB_OWNER}/${import.meta.env.VITE_GITHUB_REPO}/main`
+const GITHUB_CDN_BASE = import.meta.env.VITE_GITHUB_OWNER
+  ? `https://cdn.jsdelivr.net/gh/${import.meta.env.VITE_GITHUB_OWNER}/${import.meta.env.VITE_GITHUB_REPO}@main`
   : ''
 
 const toDisplayUrl = (url) => {
   if (!url) return null
   if (url.startsWith('../RecipeImages/')) {
     const filename = url.slice(16)
-    return GITHUB_RAW_BASE ? `${GITHUB_RAW_BASE}/RecipeImages/${filename}` : `/images/${filename}`
+    return GITHUB_CDN_BASE ? `${GITHUB_CDN_BASE}/RecipeImages/${filename}` : `/images/${filename}`
   }
   return url
 }
@@ -374,7 +374,7 @@ function App() {
                   className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all"
                 >
                   <div className="h-44 bg-slate-200">
-                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover" />
+                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
                   </div>
                   <div className="p-4">
                     <h3 className="font-bold text-slate-900 text-lg mb-1">{recipe.name}</h3>
@@ -456,7 +456,7 @@ function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {filteredRecipes.map(recipe => (
                   <div key={recipe.id} onClick={() => setSelectedRecipe(recipe)} className="bg-white p-4 rounded-2xl border border-slate-200 flex gap-4 cursor-pointer">
-                    <img src={recipe.image} className="w-20 h-20 object-cover rounded-xl bg-slate-100" />
+                    <img src={recipe.image} className="w-20 h-20 object-cover rounded-xl bg-slate-100" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
                     <div>
                       <h4 className="font-bold text-slate-900">{recipe.name}</h4>
                       <div className="flex flex-wrap gap-1 mt-2">
@@ -473,8 +473,8 @@ function App() {
 
       {/* Detaljmodal för ett recept */}
       {selectedRecipe && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center sm:justify-center animate-fade-in">
-          <div className="w-full h-[92vh] sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col shadow-xl">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center sm:justify-center animate-fade-in" onClick={() => { setSelectedRecipe(null); setConfirmDelete(false); setIsEditing(false) }}>
+          <div className="w-full h-[92vh] sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
               {isEditing
                 ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} className="text-xl font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
@@ -508,7 +508,7 @@ function App() {
                 )}
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-4">
               {confirmDelete && !isEditing && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
                   <p className="text-sm text-red-700 font-medium">Radera "{selectedRecipe.name}"?</p>
@@ -523,6 +523,7 @@ function App() {
                   <img
                     src={isEditing ? (editImagePreview || toDisplayUrl(editImageUrl)) : selectedRecipe.image}
                     className="w-full h-64 object-cover rounded-2xl"
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
                   />
                   {isEditing && (
                     <>
