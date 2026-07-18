@@ -15,7 +15,9 @@ export default async function handler(req, res) {
         headers: { 'Authorization': `Bearer ${process.env.GITHUB_TOKEN}` }
       })
       const content = await contentRes.text()
-      return { id: f.name, title: f.name.replace('.md', ''), content }
+      const imageMatch = content.match(/!\[.*?\]\((\.\.\/RecipeImages\/[^)]+)\)/)
+      const image = imageMatch ? imageMatch[1] : null
+      return { id: f.name, title: f.name.replace('.md', ''), content, image }
     }))
 
     return res.json(recipes)
