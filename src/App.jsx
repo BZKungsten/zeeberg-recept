@@ -67,6 +67,7 @@ function App() {
   const [editImageFile, setEditImageFile] = useState(null)
   const [editImagePreview, setEditImagePreview] = useState(null)
   const [editError, setEditError] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const [cropState, setCropState] = useState(null)
   const [crop, setCrop] = useState()
   const [completedCrop, setCompletedCrop] = useState(null)
@@ -448,78 +449,69 @@ function App() {
 
       {/* Kategorifliken Content */}
       {activeTab === 'categories' && (
-        <div className="px-4 py-6">
-          <div className="flex gap-2 mb-6">
-            <input
-              type="text"
-              value={newCategoryInput}
-              onChange={e => setNewCategoryInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCategory() } }}
-              placeholder="Ny kategori..."
-              className="flex-1 p-3 rounded-2xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#6B8C6B] text-sm"
-            />
-            <button
-              type="button"
-              onClick={addCategory}
-              className="px-4 py-3 bg-[#6B8C6B] text-white rounded-2xl font-semibold text-sm hover:bg-[#5a7a5a] transition-colors"
-            >
-              Lägg till
-            </button>
-          </div>
-          {confirmDeleteCategory && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
-              <p className="text-sm text-red-700 font-medium">Ta bort kategorin "#{confirmDeleteCategory}"?</p>
-              <div className="flex gap-2 shrink-0">
-                <button onClick={() => setConfirmDeleteCategory(null)} className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 rounded-xl">Avbryt</button>
-                <button onClick={() => { handleDeleteCategory(confirmDeleteCategory); setConfirmDeleteCategory(null) }} className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-xl">Ja, ta bort</button>
-              </div>
+        <div className="flex h-[calc(100vh-160px)]">
+          {/* Vänster: kategorilista */}
+          <div className="w-2/5 border-r border-slate-200 bg-white overflow-y-auto flex flex-col">
+            <div className="flex-1">
+              {allTags.map(tag => {
+                const isActive = selectedCategory === tag
+                const count = recipes.filter(r => r.tags.includes(tag)).length
+                return (
+                  <div key={tag} className={`flex items-center border-l-4 transition-all ${isActive ? 'border-[#6B8C6B] bg-slate-50' : 'border-transparent'}`}>
+                    <button onClick={() => setSelectedCategory(tag)} className="flex-1 px-3 py-3 text-left min-w-0">
+                      <p className={`text-sm font-medium truncate ${isActive ? 'text-[#4a6e4a]' : 'text-slate-700'}`}>{tag}</p>
+                      <p className="text-xs text-slate-400">{count} recept</p>
+                    </button>
+                    <button onClick={() => setConfirmDeleteCategory(tag)} className="pr-3 shrink-0 text-slate-200 hover:text-red-400 transition-colors">
+                      <X size={13} />
+                    </button>
+                  </div>
+                )
+              })}
             </div>
-          )}
-          <div className="flex flex-wrap gap-2.5 mb-8">
-            {allTags.map((tag) => {
-              const isActive = selectedTags.includes(tag)
-              const count = recipes.filter(r => r.tags.includes(tag)).length
-              return (
-                <div key={tag} className={`flex items-center rounded-2xl border transition-all ${isActive ? 'bg-[#6B8C6B] border-[#6B8C6B] shadow-sm' : 'bg-white border-slate-200'}`}>
-                  <button
-                    onClick={() => setSelectedTags(prev => isActive ? prev.filter(t => t !== tag) : [...prev, tag])}
-                    className={`px-4 py-3 font-semibold text-sm flex items-center gap-2 ${isActive ? 'text-white' : 'text-slate-700'}`}
-                  >
-                    <span>#{tag}</span>
-                    <span className="text-xs opacity-60">({count})</span>
-                  </button>
-                  <button
-                    onClick={() => setConfirmDeleteCategory(tag)}
-                    className={`pr-3 pl-1 py-3 transition-colors ${isActive ? 'text-[#b8cbb8] hover:text-white' : 'text-slate-300 hover:text-red-400'}`}
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              )
-            })}
+            <div className="border-t border-slate-100 p-2 flex gap-1 shrink-0">
+              <input
+                value={newCategoryInput}
+                onChange={e => setNewCategoryInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCategory() } }}
+                placeholder="Ny kategori..."
+                className="flex-1 px-2 py-1.5 text-xs rounded-xl border border-slate-200 outline-none focus:ring-1 focus:ring-[#6B8C6B]"
+              />
+              <button onClick={addCategory} className="px-3 py-1.5 bg-[#6B8C6B] text-white rounded-xl text-xs font-bold">+</button>
+            </div>
           </div>
 
-          {selectedTags.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-bold text-slate-800">Resultat ({filteredRecipes.length})</h2>
-                <button onClick={() => setSelectedTags([])} className="text-sm text-[#6B8C6B] font-semibold">Rensa filter</button>
+          {/* Höger: recept i vald kategori */}
+          <div className="flex-1 overflow-y-auto bg-slate-50">
+            {confirmDeleteCategory && (
+              <div className="m-3 p-3 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-3">
+                <p className="text-xs text-red-700 font-medium">Ta bort "#{confirmDeleteCategory}"?</p>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => setConfirmDeleteCategory(null)} className="px-2 py-1 text-xs bg-white border border-slate-200 rounded-lg">Avbryt</button>
+                  <button onClick={() => { handleDeleteCategory(confirmDeleteCategory); setConfirmDeleteCategory(null); if (selectedCategory === confirmDeleteCategory) setSelectedCategory(null) }} className="px-2 py-1 text-xs bg-red-600 text-white rounded-lg">Ta bort</button>
+                </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filteredRecipes.map(recipe => (
-                  <div key={recipe.id} onClick={() => setSelectedRecipe(recipe)} className="bg-white p-4 rounded-2xl border border-slate-200 flex gap-4 cursor-pointer">
-                    <img src={recipe.image} className="w-20 h-20 object-cover rounded-xl bg-slate-100" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
-                    <div>
-                      <h4 className="font-bold text-slate-900">{recipe.name}</h4>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {recipe.tags.map(t => <span key={t} className="text-xs text-slate-500">#{t}</span>)}
-                      </div>
+            )}
+            {!selectedCategory ? (
+              <div className="flex items-center justify-center h-full text-slate-400 text-sm px-4 text-center">Välj en kategori till vänster</div>
+            ) : (
+              recipes.filter(r => r.tags.includes(selectedCategory)).length === 0 ? (
+                <div className="flex items-center justify-center h-full text-slate-400 text-sm">Inga recept i denna kategori</div>
+              ) : (
+                recipes.filter(r => r.tags.includes(selectedCategory)).map(recipe => (
+                  <button key={recipe.id} onClick={() => setSelectedRecipe(recipe)}
+                    className="w-full px-4 py-3 border-b border-slate-100 bg-white text-left active:bg-slate-50 transition-colors">
+                    <p className="text-sm font-medium text-slate-900 leading-snug">{recipe.name.replace(/_/g, ' ')}</p>
+                    <div className="flex flex-wrap gap-1 mt-0.5">
+                      {recipe.tags.filter(t => t !== selectedCategory).map(t => (
+                        <span key={t} className="text-xs text-slate-400">#{t}</span>
+                      ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                  </button>
+                ))
+              )
+            )}
+          </div>
         </div>
       )}
 
