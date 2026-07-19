@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { UtensilsCrossed, Plus, Grid3x3, Search, X, Share2, CheckCircle2, Trash2, Camera, ImagePlus, Pencil, Check } from 'lucide-react'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
 import './App.css'
 
 const API_BASE = ''
@@ -23,6 +25,22 @@ const fileToBase64 = (file) => new Promise((resolve, reject) => {
   reader.onerror = reject
   reader.readAsDataURL(file)
 })
+
+const getCroppedBlob = (image, crop) =>
+  new Promise(resolve => {
+    const canvas = document.createElement('canvas')
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+    canvas.width = Math.round(crop.width * scaleX)
+    canvas.height = Math.round(crop.height * scaleY)
+    canvas.getContext('2d').drawImage(
+      image,
+      crop.x * scaleX, crop.y * scaleY,
+      crop.width * scaleX, crop.height * scaleY,
+      0, 0, canvas.width, canvas.height
+    )
+    canvas.toBlob(resolve, 'image/jpeg', 0.9)
+  })
 
 
 function App() {
@@ -49,6 +67,10 @@ function App() {
   const [editImageFile, setEditImageFile] = useState(null)
   const [editImagePreview, setEditImagePreview] = useState(null)
   const [editError, setEditError] = useState(null)
+  const [cropState, setCropState] = useState(null)
+  const [crop, setCrop] = useState()
+  const [completedCrop, setCompletedCrop] = useState(null)
+  const imgRef = useRef(null)
   const [confirmDeleteCategory, setConfirmDeleteCategory] = useState(null)
   const [importUrl, setImportUrl] = useState('')
   const [importLoading, setImportLoading] = useState(false)
@@ -561,7 +583,14 @@ function App() {
                         <span className="text-white text-sm font-semibold bg-black/50 px-3 py-1.5 rounded-xl">Byt bild</span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
                           const f = e.target.files[0]
-                          if (f) { setEditImageFile(f); setEditImagePreview(URL.createObjectURL(f)) }
+                          if (!f) return
+                          setCrop(undefined); setCompletedCrop(null)
+                          setCropState({ src: URL.createObjectURL(f), onConfirm: async (img, c) => {
+                            const blob = await getCroppedBlob(img, c)
+                            setEditImageFile(Object.assign(blob, { name: f.name, type: 'image/jpeg' }))
+                            setEditImagePreview(URL.createObjectURL(blob))
+                            setCropState(null)
+                          }})
                         }} />
                       </label>
                       <button type="button" onClick={() => { setEditImageFile(null); setEditImagePreview(null); setEditImageUrl(null) }} className="absolute top-2 right-2 bg-white/80 rounded-full p-1.5"><X size={16} /></button>
@@ -574,7 +603,14 @@ function App() {
                   <span className="text-xs text-slate-500">Lägg till bild</span>
                   <input type="file" accept="image/*" className="hidden" onChange={e => {
                     const f = e.target.files[0]
-                    if (f) { setEditImageFile(f); setEditImagePreview(URL.createObjectURL(f)) }
+                    if (!f) return
+                    setCrop(undefined); setCompletedCrop(null)
+                    setCropState({ src: URL.createObjectURL(f), onConfirm: async (img, c) => {
+                      const blob = await getCroppedBlob(img, c)
+                      setEditImageFile(Object.assign(blob, { name: f.name, type: 'image/jpeg' }))
+                      setEditImagePreview(URL.createObjectURL(blob))
+                      setCropState(null)
+                    }})
                   }} />
                 </label>
               ) : null}
@@ -676,8 +712,13 @@ function App() {
                     <input type="file" accept="image/*" className="hidden" onChange={e => {
                       const file = e.target.files[0]
                       if (!file) return
-                      setImageFile(file)
-                      setImagePreview(URL.createObjectURL(file))
+                      setCrop(undefined); setCompletedCrop(null)
+                      setCropState({ src: URL.createObjectURL(file), onConfirm: async (img, c) => {
+                        const blob = await getCroppedBlob(img, c)
+                        setImageFile(Object.assign(blob, { name: file.name, type: 'image/jpeg' }))
+                        setImagePreview(URL.createObjectURL(blob))
+                        setCropState(null)
+                      }})
                     }} />
                   </label>
                 )}
@@ -735,6 +776,31 @@ function App() {
           </button>
         </div>
       </div>
+
+      {/* Crop Modal */}
+      {cropState && (
+        <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-4">
+          <div className="bg-white rounded-3xl overflow-hidden w-full max-w-lg">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="font-bold text-slate-900">Beskär bild</h3>
+              <button onClick={() => setCropState(null)} className="p-2 bg-slate-100 rounded-full"><X size={18} /></button>
+            </div>
+            <div className="p-4 flex justify-center bg-slate-100">
+              <ReactCrop crop={crop} onChange={c => setCrop(c)} onComplete={c => setCompletedCrop(c)}>
+                <img ref={imgRef} src={cropState.src} className="max-h-[50vh] max-w-full" alt="Beskär" />
+              </ReactCrop>
+            </div>
+            <div className="p-4 flex gap-3">
+              <button onClick={() => setCropState(null)} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
+              <button
+                onClick={() => completedCrop && cropState.onConfirm(imgRef.current, completedCrop)}
+                disabled={!completedCrop}
+                className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold disabled:opacity-40"
+              >Bekräfta</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
