@@ -786,7 +786,7 @@ function App() {
               <button onClick={() => setCropState(null)} className="p-2 bg-slate-100 rounded-full"><X size={18} /></button>
             </div>
             <div className="p-4 flex justify-center bg-slate-100">
-              <ReactCrop crop={crop} onChange={c => setCrop(c)} onComplete={c => setCompletedCrop(c)}>
+              <ReactCrop crop={crop} onChange={(c) => { setCrop(c); setCompletedCrop(c) }}>
                 <img ref={imgRef} src={cropState.src} className="max-h-[50vh] max-w-full" alt="Beskär" />
               </ReactCrop>
             </div>
