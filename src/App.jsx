@@ -373,8 +373,8 @@ function App() {
                   onClick={() => setSelectedRecipe(recipe)}
                   className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all"
                 >
-                  <div className="relative h-44 bg-slate-200">
-                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
+                  <div className="relative h-56 bg-slate-200">
+                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover object-center" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
                     <div className="absolute bottom-2 right-2 flex gap-1.5 z-10">
                       <button
                         onClick={(e) => {
