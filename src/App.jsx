@@ -815,14 +815,16 @@ function App() {
             <Plus size={28} />
           </button>
 
-          <button onClick={() => setActiveTab('categories-grid')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-grid' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
-            <Grid3x3 size={24} />
-            <span className="text-xs font-medium">Rutnät</span>
-          </button>
-          <button onClick={() => setActiveTab('categories-list')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-list' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
-            <List size={24} />
-            <span className="text-xs font-medium">Lista</span>
-          </button>
+          <div className="flex gap-4 items-center">
+            <button onClick={() => setActiveTab('categories-grid')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-grid' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+              <Grid3x3 size={22} />
+              <span className="text-xs font-medium">Rutnät</span>
+            </button>
+            <button onClick={() => setActiveTab('categories-list')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-list' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+              <List size={22} />
+              <span className="text-xs font-medium">Lista</span>
+            </button>
+          </div>
         </div>
       </div>
 
