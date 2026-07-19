@@ -585,10 +585,9 @@ function App() {
                           const f = e.target.files[0]
                           if (!f) return
                           setCrop(undefined); setCompletedCrop(null)
-                          setCropState({ src: URL.createObjectURL(f), onConfirm: async (img, c) => {
-                            const blob = await getCroppedBlob(img, c)
-                            setEditImageFile(Object.assign(blob, { name: f.name, type: 'image/jpeg' }))
-                            setEditImagePreview(URL.createObjectURL(blob))
+                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, onConfirm: (file) => {
+                            setEditImageFile(file)
+                            setEditImagePreview(URL.createObjectURL(file))
                             setCropState(null)
                           }})
                         }} />
@@ -605,10 +604,9 @@ function App() {
                     const f = e.target.files[0]
                     if (!f) return
                     setCrop(undefined); setCompletedCrop(null)
-                    setCropState({ src: URL.createObjectURL(f), onConfirm: async (img, c) => {
-                      const blob = await getCroppedBlob(img, c)
-                      setEditImageFile(Object.assign(blob, { name: f.name, type: 'image/jpeg' }))
-                      setEditImagePreview(URL.createObjectURL(blob))
+                    setCropState({ src: URL.createObjectURL(f), originalName: f.name, onConfirm: (file) => {
+                      setEditImageFile(file)
+                      setEditImagePreview(URL.createObjectURL(file))
                       setCropState(null)
                     }})
                   }} />
@@ -713,10 +711,9 @@ function App() {
                       const file = e.target.files[0]
                       if (!file) return
                       setCrop(undefined); setCompletedCrop(null)
-                      setCropState({ src: URL.createObjectURL(file), onConfirm: async (img, c) => {
-                        const blob = await getCroppedBlob(img, c)
-                        setImageFile(Object.assign(blob, { name: file.name, type: 'image/jpeg' }))
-                        setImagePreview(URL.createObjectURL(blob))
+                      setCropState({ src: URL.createObjectURL(file), originalName: file.name, onConfirm: (f) => {
+                        setImageFile(f)
+                        setImagePreview(URL.createObjectURL(f))
                         setCropState(null)
                       }})
                     }} />
@@ -790,11 +787,24 @@ function App() {
                 <img ref={imgRef} src={cropState.src} className="max-h-[50vh] max-w-full" alt="Beskär" />
               </ReactCrop>
             </div>
-            <div className="p-4 flex gap-3">
+            {completedCrop?.width > 0 && completedCrop?.height > 0
+              ? <p className="text-center text-xs text-[#6B8C6B] pb-1">Område valt ✓</p>
+              : <p className="text-center text-xs text-slate-400 pb-1">Rita ett område att beskära</p>
+            }
+            <div className="p-4 pt-1 flex gap-3">
               <button onClick={() => setCropState(null)} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
               <button
-                onClick={() => completedCrop && cropState.onConfirm(imgRef.current, completedCrop)}
-                disabled={!completedCrop}
+                onClick={async () => {
+                  if (!imgRef.current || !completedCrop?.width || !completedCrop?.height) return
+                  try {
+                    const blob = await getCroppedBlob(imgRef.current, completedCrop)
+                    const file = new File([blob], cropState.originalName || 'crop.jpg', { type: 'image/jpeg' })
+                    cropState.onConfirm(file)
+                  } catch (err) {
+                    console.error('Crop error:', err)
+                  }
+                }}
+                disabled={!completedCrop?.width || !completedCrop?.height}
                 className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold disabled:opacity-40"
               >Bekräfta</button>
             </div>
