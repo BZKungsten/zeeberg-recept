@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { UtensilsCrossed, Plus, Grid3x3, Search, X, Share2, CheckCircle2, Trash2, Camera, ImagePlus, Pencil, Check } from 'lucide-react'
+import { UtensilsCrossed, Plus, Grid3x3, List, Search, X, Share2, CheckCircle2, Trash2, Camera, ImagePlus, Pencil, Check } from 'lucide-react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import './App.css'
@@ -366,7 +366,7 @@ function App() {
       )}
 
       {/* Header - Kategorifliken */}
-      {activeTab === 'categories' && (
+      {(activeTab === 'categories-grid' || activeTab === 'categories-list') && (
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="px-6 py-6">
             <h1 className="text-4xl font-bold text-slate-900">Kategorier</h1>
@@ -448,7 +448,63 @@ function App() {
       )}
 
       {/* Kategorifliken Content */}
-      {activeTab === 'categories' && (
+      {/* Kategorier - rutnät (gamla vyn) */}
+      {activeTab === 'categories-grid' && (
+        <div className="px-4 py-6">
+          {confirmDeleteCategory && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
+              <p className="text-sm text-red-700 font-medium">Ta bort kategorin "#{confirmDeleteCategory}"?</p>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => setConfirmDeleteCategory(null)} className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 rounded-xl">Avbryt</button>
+                <button onClick={() => { handleDeleteCategory(confirmDeleteCategory); setConfirmDeleteCategory(null) }} className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-xl">Ja, ta bort</button>
+              </div>
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2.5 mb-8">
+            {allTags.map((tag) => {
+              const isActive = selectedTags.includes(tag)
+              const count = recipes.filter(r => r.tags.includes(tag)).length
+              return (
+                <div key={tag} className={`flex items-center rounded-2xl border transition-all ${isActive ? 'bg-[#6B8C6B] border-[#6B8C6B] shadow-sm' : 'bg-white border-slate-200'}`}>
+                  <button onClick={() => setSelectedTags(prev => isActive ? prev.filter(t => t !== tag) : [...prev, tag])} className={`px-4 py-3 font-semibold text-sm flex items-center gap-2 ${isActive ? 'text-white' : 'text-slate-700'}`}>
+                    <span>#{tag}</span>
+                    <span className="text-xs opacity-60">({count})</span>
+                  </button>
+                  <button onClick={() => setConfirmDeleteCategory(tag)} className={`pr-3 pl-1 py-3 transition-colors ${isActive ? 'text-[#b8cbb8] hover:text-white' : 'text-slate-300 hover:text-red-400'}`}>
+                    <X size={14} />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+          <div className="flex gap-2 mb-6">
+            <input type="text" value={newCategoryInput} onChange={e => setNewCategoryInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCategory() } }} placeholder="Ny kategori..." className="flex-1 p-3 rounded-2xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#6B8C6B] text-sm" />
+            <button type="button" onClick={addCategory} className="px-4 py-3 bg-[#6B8C6B] text-white rounded-2xl font-semibold text-sm">Lägg till</button>
+          </div>
+          {selectedTags.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-bold text-slate-800">Resultat ({filteredRecipes.length})</h2>
+                <button onClick={() => setSelectedTags([])} className="text-sm text-[#6B8C6B] font-semibold">Rensa filter</button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {filteredRecipes.map(recipe => (
+                  <div key={recipe.id} onClick={() => setSelectedRecipe(recipe)} className="bg-white p-4 rounded-2xl border border-slate-200 flex gap-4 cursor-pointer">
+                    <img src={recipe.image} className="w-20 h-20 object-cover rounded-xl bg-slate-100" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
+                    <div>
+                      <h4 className="font-bold text-slate-900">{recipe.name}</h4>
+                      <div className="flex flex-wrap gap-1 mt-2">{recipe.tags.map(t => <span key={t} className="text-xs text-slate-500">#{t}</span>)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Kategorier - lista (nya vyn) */}
+      {activeTab === 'categories-list' && (
         <div className="flex h-[calc(100vh-160px)]">
           {/* Vänster: kategorilista */}
           <div className="w-2/5 border-r border-slate-200 bg-white overflow-y-auto flex flex-col">
@@ -759,9 +815,13 @@ function App() {
             <Plus size={28} />
           </button>
 
-          <button onClick={() => setActiveTab('categories')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+          <button onClick={() => setActiveTab('categories-grid')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-grid' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
             <Grid3x3 size={24} />
-            <span className="text-xs font-medium">Kategorier</span>
+            <span className="text-xs font-medium">Rutnät</span>
+          </button>
+          <button onClick={() => setActiveTab('categories-list')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-list' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+            <List size={24} />
+            <span className="text-xs font-medium">Lista</span>
           </button>
         </div>
       </div>
