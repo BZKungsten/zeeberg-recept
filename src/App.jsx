@@ -508,7 +508,7 @@ function App() {
             <div className="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
               {isEditing
                 ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} className="text-xl font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
-                : <h2 className="text-xl font-bold text-slate-900">{selectedRecipe.name}</h2>
+                : <h2 className="text-xl font-bold text-slate-900 truncate min-w-0 flex-1 mr-3">{selectedRecipe.name}</h2>
               }
               <div className="flex gap-2 shrink-0">
                 {isEditing ? (
