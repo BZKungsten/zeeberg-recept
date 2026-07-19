@@ -373,8 +373,38 @@ function App() {
                   onClick={() => setSelectedRecipe(recipe)}
                   className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all"
                 >
-                  <div className="h-44 bg-slate-200">
+                  <div className="relative h-44 bg-slate-200">
                     <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
+                    <div className="absolute bottom-2 right-2 flex gap-1.5">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          const imageMatch = recipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
+                          setEditTitle(recipe.name)
+                          setEditContent(recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim())
+                          setEditTags([...recipe.tags])
+                          setEditImageUrl(imageMatch ? imageMatch[1] : null)
+                          setEditImageFile(null)
+                          setEditImagePreview(null)
+                          setEditCustomTag('')
+                          setSelectedRecipe(recipe)
+                          setIsEditing(true)
+                        }}
+                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-slate-700"
+                      ><Pencil size={15} /></button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedRecipe(recipe); setConfirmDelete(true) }}
+                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-red-500"
+                      ><Trash2 size={15} /></button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (navigator.share) { navigator.share({ title: recipe.name, text: recipe.name }) }
+                          else { navigator.clipboard?.writeText(recipe.name) }
+                        }}
+                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-slate-700"
+                      ><Share2 size={15} /></button>
+                    </div>
                   </div>
                   <div className="p-4">
                     <h3 className="font-bold text-slate-900 text-lg mb-1">{recipe.name}</h3>
