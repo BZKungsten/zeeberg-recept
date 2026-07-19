@@ -18,6 +18,5 @@ GÖR SÅ HÄR
 2. Finhacka lök och vitlök. Skala och skär palsternackan i 2 cm tärningar. Stek löken mjuk i oljan i en stor kastrull. Tillsätt palsternacka, vitlök och rosmarin och stek ett par minuter till. Häll på buljong och låt koka upp.
 3. Tillsätt pastan och låt koka tills al dente, rör ofta.
 4. Skölj och skär bort stammen från grönkålen och riv bladen i bitar, låt kålen koka med i soppan sista 30 sekunderna. Rör i pancettan och smaka
-has context menu
 
 #Soppa
