@@ -507,8 +507,8 @@ function App() {
           <div className="w-full h-[92vh] sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
               {isEditing
-                ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} className="text-xl font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
-                : <h2 className="text-xl font-bold text-slate-900 truncate min-w-0 flex-1 mr-3">{selectedRecipe.name}</h2>
+                ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} maxLength={50} className="text-base font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
+                : <h2 className="text-base font-bold text-slate-900 truncate min-w-0 flex-1 mr-3">{selectedRecipe.name}</h2>
               }
               <div className="flex gap-2 shrink-0">
                 {isEditing ? (
@@ -649,7 +649,7 @@ function App() {
             <form onSubmit={handleAddRecipe} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Receptnamn *</label>
-                <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="t.ex. Krispig Båtlunch-wrap" className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#6B8C6B] outline-none" />
+                <input type="text" required maxLength={50} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="t.ex. Krispig Båtlunch-wrap" className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#6B8C6B] outline-none" />
               </div>
 
               <div>
