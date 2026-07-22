@@ -348,7 +348,7 @@ function App() {
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="px-6 py-6">
             <div className="mb-4">
-              <h1 className="text-2xl font-black tracking-[0.2em] uppercase" style={{fontFamily: "'Montserrat', sans-serif"}}><span className="text-slate-900">ZEEBERG </span><span className="text-[#6B8C6B]">RECEPT</span></h1>
+              <h1 className="text-2xl font-black tracking-[0.2em] uppercase" style={{fontFamily: "'Montserrat', sans-serif"}}><span className="text-slate-900">ZEEBERG </span><span className="text-[#6B8C6B]">RECEPT</span><span className="text-red-400 ml-2">♥</span></h1>
               <p className="text-sm text-slate-500 mt-1">Familjens sparade mat- och drycktips</p>
             </div>
             <div className="relative">
