@@ -751,7 +751,7 @@ function App() {
                   </div>
                 </>
               ) : (
-                <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
+                <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
               )}
             </div>
           </div>
