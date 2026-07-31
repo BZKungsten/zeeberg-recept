@@ -6,7 +6,7 @@ Total: 45 min
 
 Portioner: 4 portioner
 
-Ingredienser:
+Ingredienser: lopp
 - 1 gul lök (stor)
 - 4 klyftor vitlök
 - 2 stjälkar stjälkselleri
@@ -35,3 +35,5 @@ Instruktioner:
 7. Ta av risotton från värmen, tillsätt salt, peppar, smör och riven parmesan.
 8. Riv mozzarellan i mindre bitar.
 9. Lägg upp risotton, strö över mozzarella, timjan, chiliflakes och ringla över resterande 2 msk olja.
+
+#Vegetariskt
