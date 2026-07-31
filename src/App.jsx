@@ -889,38 +889,43 @@ function App() {
       {/* Crop Modal */}
       {cropState && (
         <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-4">
-          <div className="bg-white rounded-3xl overflow-hidden w-full max-w-lg">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+          <div className="bg-white rounded-3xl overflow-hidden w-full max-w-lg flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center shrink-0">
               <h3 className="font-bold text-slate-900">Beskär bild</h3>
               <button onClick={() => setCropState(null)} className="p-2 bg-slate-100 rounded-full"><X size={18} /></button>
             </div>
-            <div className="p-4 flex justify-center bg-slate-100">
+            <div className="flex-1 min-h-0 overflow-auto bg-slate-100 flex items-center justify-center p-4">
               <ReactCrop crop={crop} onChange={(c) => { setCrop(c); setCompletedCrop(c) }}>
-                <img ref={imgRef} src={cropState.src} className="max-h-[50vh] max-w-full" alt="Beskär" />
+                <img ref={imgRef} src={cropState.src} className="max-h-full max-w-full object-contain" alt="Beskär" />
               </ReactCrop>
             </div>
-            {completedCrop?.width > 0 && completedCrop?.height > 0
-              ? <p className="text-center text-xs text-[#6B8C6B] pb-1">Område valt ✓</p>
-              : <p className="text-center text-xs text-slate-400 pb-1">Rita ett område att beskära, eller bekräfta som den är</p>
-            }
-            <div className="p-4 pt-1 flex gap-3">
-              <button onClick={() => setCropState(null)} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
-              <button
-                onClick={async () => {
-                  try {
-                    if (completedCrop?.width > 0 && completedCrop?.height > 0 && imgRef.current) {
-                      const blob = await getCroppedBlob(imgRef.current, completedCrop)
-                      const file = new File([blob], cropState.originalName || 'crop.jpg', { type: 'image/jpeg' })
-                      cropState.onConfirm(file)
-                    } else {
+            <div className="shrink-0">
+              {completedCrop?.width > 0 && completedCrop?.height > 0
+                ? <p className="text-center text-xs text-[#6B8C6B] pt-2">Område valt ✓</p>
+                : <p className="text-center text-xs text-slate-400 pt-2">Rita ett område att beskära, eller bekräfta som den är</p>
+              }
+              <div className="p-4 pt-2 flex gap-3">
+                <button onClick={() => setCropState(null)} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
+                <button
+                  onClick={async () => {
+                    try {
+                      if (completedCrop?.width > 0 && completedCrop?.height > 0 && imgRef.current) {
+                        const blob = await getCroppedBlob(imgRef.current, completedCrop)
+                        if (blob && blob.size > 0) {
+                          const file = new File([blob], cropState.originalName || 'crop.jpg', { type: 'image/jpeg' })
+                          cropState.onConfirm(file)
+                          return
+                        }
+                      }
+                      cropState.onConfirm(cropState.originalFile)
+                    } catch (err) {
+                      console.error('Crop error:', err)
                       cropState.onConfirm(cropState.originalFile)
                     }
-                  } catch (err) {
-                    console.error('Crop error:', err)
-                  }
-                }}
-                className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold"
-              >Bekräfta</button>
+                  }}
+                  className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold"
+                >Bekräfta</button>
+              </div>
             </div>
           </div>
         </div>
