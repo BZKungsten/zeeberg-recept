@@ -668,11 +668,11 @@ function App() {
                     className="w-full h-64 object-cover"
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
                   />
-                  {!isEditing && <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />}
+                  {!isEditing && <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60 pointer-events-none" />}
                   {!isEditing && selectedRecipe.tags.length > 0 && (
-                    <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
                       {selectedRecipe.tags.map(tag => (
-                        <span key={tag} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30">
+                        <span key={tag} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-black/50 text-white">
                           #{tag}
                         </span>
                       ))}
