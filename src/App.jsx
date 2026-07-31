@@ -72,6 +72,9 @@ function App() {
   const [crop, setCrop] = useState()
   const [completedCrop, setCompletedCrop] = useState(null)
   const imgRef = useRef(null)
+  const [editExtraImages, setEditExtraImages] = useState([])
+  const [editExtraImageFiles, setEditExtraImageFiles] = useState([])
+  const [lightboxImage, setLightboxImage] = useState(null)
   const [confirmDeleteCategory, setConfirmDeleteCategory] = useState(null)
   const [importUrl, setImportUrl] = useState('')
   const [importLoading, setImportLoading] = useState(false)
@@ -98,9 +101,10 @@ function App() {
           .map(tag => tag.substring(1))
           .filter((tag, idx, self) => self.indexOf(tag) === idx)
 
-        // Extrahera bild om den sparats i Markdown-format ![alt](url)
-        const imageMatch = file.content.match(/!\[.*?\]\((.*?)\)/)
-        let imageUrl = toDisplayUrl(imageMatch ? imageMatch[1] : null)
+        // Extrahera alla bilder i Markdown-format ![alt](url)
+        const imageMatches = [...file.content.matchAll(/!\[.*?\]\((.*?)\)/g)]
+        let imageUrl = toDisplayUrl(imageMatches[0]?.[1] ?? null)
+        const extraImages = imageMatches.slice(1).map(m => toDisplayUrl(m[1])).filter(Boolean)
 
         // Om ingen bild finns, genererar vi en stabil sökning via Unsplash Source API (via pexels/unsplash fungerande länk)
         if (!imageUrl) {
@@ -121,6 +125,7 @@ function App() {
           fullContent: file.content,
           tags: hashtags,
           image: imageUrl,
+          extraImages,
           addedDate: new Date().toLocaleDateString('sv-SE')
         }
       })
@@ -299,8 +304,18 @@ function App() {
         const { url } = await uploadRes.json()
         finalImageUrl = url
       }
+      const uploadedExtraUrls = await Promise.all(editExtraImageFiles.map(async ({file}) => {
+        const base64 = await fileToBase64(file)
+        const res = await fetch(`${API_BASE}/api/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file.name, data: base64, contentType: file.type }) })
+        if (!res.ok) throw new Error('Bild-uppladdning misslyckades')
+        return (await res.json()).url
+      }))
+      const allExtraUrls = [...editExtraImages, ...uploadedExtraUrls]
+
       let finalContent = ''
-      if (finalImageUrl) finalContent += `![Receptbild](${finalImageUrl})\n\n`
+      if (finalImageUrl) finalContent += `![Receptbild](${finalImageUrl})\n`
+      allExtraUrls.forEach(url => { finalContent += `![Extrabild](${url})\n` })
+      if (finalImageUrl || allExtraUrls.length > 0) finalContent += '\n'
       finalContent += editContent.trim()
       if (editTags.length > 0) finalContent += `\n\n${editTags.map(t => `#${t}`).join(' ')}`
 
@@ -404,12 +419,15 @@ function App() {
                           e.stopPropagation()
                           const imageMatch = recipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
                           setEditTitle(recipe.name)
-                          setEditContent(recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim())
+                          setEditContent(recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim())
                           setEditTags([...recipe.tags])
                           setEditImageUrl(imageMatch ? imageMatch[1] : null)
                           setEditImageFile(null)
                           setEditImagePreview(null)
                           setEditCustomTag('')
+                          const allImgMatches1 = [...recipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
+                          setEditExtraImages(allImgMatches1.slice(1).map(m => m[1]))
+                          setEditExtraImageFiles([])
                           setSelectedRecipe(recipe)
                           setIsEditing(true)
                         }}
@@ -592,7 +610,7 @@ function App() {
                       const imageMatch = selectedRecipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
                       setEditTitle(selectedRecipe.name)
                       setEditContent(selectedRecipe.fullContent
-                        .replace(/!\[.*?\]\(.*?\)\n\n?/, '')
+                        .replace(/!\[.*?\]\(.*?\)\n\n?/g, '')
                         .replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '')
                         .trim())
                       setEditTags([...selectedRecipe.tags])
@@ -600,6 +618,9 @@ function App() {
                       setEditImageFile(null)
                       setEditImagePreview(null)
                       setEditCustomTag('')
+                      const allImgMatches2 = [...selectedRecipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
+                      setEditExtraImages(allImgMatches2.slice(1).map(m => m[1]))
+                      setEditExtraImageFiles([])
                       setIsEditing(true)
                     }} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Pencil size={20} /></button>
                     <button onClick={() => setConfirmDelete(true)} className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-full transition-colors"><Trash2 size={20} /></button>
@@ -660,9 +681,46 @@ function App() {
                   }} />
                 </label>
               ) : null}
+              {!isEditing && selectedRecipe.extraImages?.length > 0 && (
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {selectedRecipe.extraImages.map((url, i) => (
+                    <img key={i} src={url} alt="" className="w-28 h-28 object-cover rounded-xl shrink-0 cursor-pointer active:opacity-80"
+                      onClick={() => setLightboxImage(url)}
+                      onError={(e) => { e.target.onerror = null; e.target.style.display = 'none' }} />
+                  ))}
+                </div>
+              )}
               {isEditing ? (
                 <>
                   {editError && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{editError}</div>}
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Fler bilder</label>
+                    <div className="flex gap-2 overflow-x-auto pb-1">
+                      {editExtraImages.map((url, i) => (
+                        <div key={i} className="relative shrink-0">
+                          <img src={toDisplayUrl(url)} className="w-24 h-24 object-cover rounded-xl" />
+                          <button type="button" onClick={() => setEditExtraImages(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5"><X size={12} className="text-white" /></button>
+                        </div>
+                      ))}
+                      {editExtraImageFiles.map(({preview}, i) => (
+                        <div key={i} className="relative shrink-0">
+                          <img src={preview} className="w-24 h-24 object-cover rounded-xl" />
+                          <button type="button" onClick={() => setEditExtraImageFiles(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5"><X size={12} className="text-white" /></button>
+                        </div>
+                      ))}
+                      <label className="w-24 h-24 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer shrink-0 hover:border-[#6B8C6B] hover:bg-[#f0f5f0]">
+                        <Plus size={20} className="text-slate-400" />
+                        <input type="file" accept="image/*" className="hidden" onChange={e => {
+                          const f = e.target.files[0]; if (!f) return
+                          setCrop(undefined); setCompletedCrop(null)
+                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
+                            setEditExtraImageFiles(prev => [...prev, { file, preview: URL.createObjectURL(file) }])
+                            setCropState(null)
+                          }})
+                        }} />
+                      </label>
+                    </div>
+                  </div>
                   <textarea value={editContent} onChange={e => setEditContent(e.target.value)} rows={12} className="w-full p-4 text-sm text-slate-700 bg-slate-50 border border-[#9ab89a] rounded-2xl outline-none focus:ring-2 focus:ring-[#6B8C6B] resize-none" />
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Kategorier</label>
@@ -865,6 +923,14 @@ function App() {
               >Bekräfta</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxImage && (
+        <div className="fixed inset-0 bg-black/90 z-[70] flex items-center justify-center p-4" onClick={() => setLightboxImage(null)}>
+          <img src={lightboxImage} className="max-w-full max-h-full rounded-2xl object-contain" alt="" />
+          <button onClick={() => setLightboxImage(null)} className="absolute top-4 right-4 p-2 bg-white/20 rounded-full"><X size={24} className="text-white" /></button>
         </div>
       )}
     </div>
