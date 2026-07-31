@@ -27,7 +27,7 @@ const fileToBase64 = (file) => new Promise((resolve, reject) => {
 })
 
 const compressImage = (file, maxPx = 1600, quality = 0.82) =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     const img = new Image()
     const url = URL.createObjectURL(file)
     img.onload = () => {
@@ -38,9 +38,11 @@ const compressImage = (file, maxPx = 1600, quality = 0.82) =>
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
       URL.revokeObjectURL(url)
       canvas.toBlob(blob => {
-        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }))
+        if (blob) resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }))
+        else reject(new Error('Komprimering misslyckades'))
       }, 'image/jpeg', quality)
     }
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Bilden kunde inte läsas')) }
     img.src = url
   })
 
@@ -952,7 +954,7 @@ function App() {
             </div>
             <div className="flex-1 min-h-0 overflow-auto bg-slate-100 flex items-center justify-center p-4">
               <ReactCrop crop={crop} onChange={(c) => { setCrop(c); setCompletedCrop(c) }}>
-                <img ref={imgRef} src={cropState.src} className="max-h-full max-w-full object-contain" alt="Beskär" />
+                <img ref={imgRef} src={cropState.src} className="max-h-[55vh] max-w-full block" alt="Beskär" />
               </ReactCrop>
             </div>
             <div className="shrink-0">
