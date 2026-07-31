@@ -14,3 +14,5 @@ champinjoner: 200 g
 zucchini: 1 st
 salt: 3 g
 svartpeppar: 2 g
+
+#Vegetariskt
