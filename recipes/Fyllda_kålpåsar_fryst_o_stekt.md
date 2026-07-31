@@ -1,5 +1,5 @@
 ![Receptbild](../RecipeImages/1784610348669.jpg)
-![Extrabild](../RecipeImages/1785520271710.jpg)
+![Extrabild](../RecipeImages/1785520275519.jpg)
 
 Kål godare än någonsin! Metoden som blir viral
 
