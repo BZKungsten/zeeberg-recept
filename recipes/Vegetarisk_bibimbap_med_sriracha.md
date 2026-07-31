@@ -58,3 +58,5 @@ Låt polkabetorna rinna av.
 Fördela ris i skålar, lägg på grönsaker och tofu, ringla över all sås.
 Lägg sist på ägget.
 Servera med srirachamajonnäs, soja och koriander.
+
+#Vegetariskt #Asiatisk
