@@ -21,3 +21,5 @@ Ingredienser:
 - 1 krm nymald svartpeppar
 
 Instruktioner:
+
+#Lax
