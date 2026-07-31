@@ -722,21 +722,6 @@ function App() {
                   ))}
                 </div>
               )}
-              {!isEditing && allTags.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategorier</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {allTags.map(tag => {
-                      const assigned = selectedRecipe.tags.includes(tag)
-                      return (
-                        <span key={tag} className={`px-2.5 py-1 rounded-full text-xs font-medium border ${assigned ? 'bg-[#6B8C6B] text-white border-[#6B8C6B]' : 'bg-white text-slate-400 border-slate-200'}`}>
-                          #{tag}
-                        </span>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
               {isEditing ? (
                 <>
                   {editError && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{editError}</div>}
@@ -797,7 +782,24 @@ function App() {
                   </div>
                 </>
               ) : (
-                <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
+                <>
+                  <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
+                  {allTags.length > 0 && (
+                    <div>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategorier</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {allTags.map(tag => {
+                          const assigned = selectedRecipe.tags.includes(tag)
+                          return (
+                            <span key={tag} className={`px-2.5 py-1 rounded-full text-xs font-medium border ${assigned ? 'bg-[#6B8C6B] text-white border-[#6B8C6B]' : 'bg-white text-slate-400 border-slate-200'}`}>
+                              #{tag}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
