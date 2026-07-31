@@ -727,21 +727,28 @@ function App() {
                   {editError && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{editError}</div>}
                   <div>
                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Fler bilder</label>
-                    <div className="flex gap-2 overflow-x-auto pb-1">
+                    <div className="flex flex-col gap-2">
                       {editExtraImages.map((url, i) => (
-                        <div key={url} className="relative shrink-0">
-                          <img src={toDisplayUrl(url)} className="w-24 h-24 object-cover rounded-xl" />
-                          <button type="button" onClick={() => setEditExtraImages(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/70 rounded-full p-2 z-10"><X size={14} className="text-white" /></button>
+                        <div key={url} className="flex items-center gap-3">
+                          <img src={toDisplayUrl(url)} className="w-16 h-16 object-cover rounded-xl shrink-0" />
+                          <button type="button" onClick={() => setEditExtraImages(prev => prev.filter((_,j) => j !== i))} className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-500 rounded-xl text-sm font-semibold">
+                            <X size={14} /> Ta bort
+                          </button>
                         </div>
                       ))}
-                      {editExtraImageFiles.map(({preview, file}, i) => (
-                        <div key={preview} className="relative shrink-0">
-                          <img src={preview} className="w-24 h-24 object-cover rounded-xl" />
-                          <button type="button" onClick={() => setEditExtraImageFiles(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/70 rounded-full p-2 z-10"><X size={14} className="text-white" /></button>
+                      {editExtraImageFiles.map(({preview}, i) => (
+                        <div key={preview} className="flex items-center gap-3">
+                          <img src={preview} className="w-16 h-16 object-cover rounded-xl shrink-0" />
+                          <button type="button" onClick={() => setEditExtraImageFiles(prev => prev.filter((_,j) => j !== i))} className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-500 rounded-xl text-sm font-semibold">
+                            <X size={14} /> Ta bort
+                          </button>
                         </div>
                       ))}
-                      <label className="w-24 h-24 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer shrink-0 hover:border-[#6B8C6B] hover:bg-[#f0f5f0]">
-                        <Plus size={20} className="text-slate-400" />
+                      <label className="flex items-center gap-3 cursor-pointer py-1">
+                        <div className="w-16 h-16 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center bg-slate-50 shrink-0">
+                          <Plus size={20} className="text-slate-400" />
+                        </div>
+                        <span className="text-sm text-slate-500 font-medium">Lägg till bild</span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
                           const f = e.target.files[0]; if (!f) return
                           setCrop(undefined); setCompletedCrop(null)
