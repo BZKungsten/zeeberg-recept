@@ -5,5 +5,6 @@ Svamp
 Grönkål
 Vitkål
 Avokado
+.
 
 #Vegetariskt
