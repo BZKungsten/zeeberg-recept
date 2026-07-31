@@ -729,15 +729,15 @@ function App() {
                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Fler bilder</label>
                     <div className="flex gap-2 overflow-x-auto pb-1">
                       {editExtraImages.map((url, i) => (
-                        <div key={i} className="relative shrink-0">
+                        <div key={url} className="relative shrink-0">
                           <img src={toDisplayUrl(url)} className="w-24 h-24 object-cover rounded-xl" />
-                          <button type="button" onClick={() => setEditExtraImages(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5"><X size={12} className="text-white" /></button>
+                          <button type="button" onClick={() => setEditExtraImages(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/70 rounded-full p-2 z-10"><X size={14} className="text-white" /></button>
                         </div>
                       ))}
-                      {editExtraImageFiles.map(({preview}, i) => (
-                        <div key={i} className="relative shrink-0">
+                      {editExtraImageFiles.map(({preview, file}, i) => (
+                        <div key={preview} className="relative shrink-0">
                           <img src={preview} className="w-24 h-24 object-cover rounded-xl" />
-                          <button type="button" onClick={() => setEditExtraImageFiles(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5"><X size={12} className="text-white" /></button>
+                          <button type="button" onClick={() => setEditExtraImageFiles(prev => prev.filter((_,j) => j !== i))} className="absolute top-1 right-1 bg-black/70 rounded-full p-2 z-10"><X size={14} className="text-white" /></button>
                         </div>
                       ))}
                       <label className="w-24 h-24 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer shrink-0 hover:border-[#6B8C6B] hover:bg-[#f0f5f0]">
