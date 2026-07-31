@@ -304,12 +304,13 @@ function App() {
         const { url } = await uploadRes.json()
         finalImageUrl = url
       }
-      const uploadedExtraUrls = await Promise.all(editExtraImageFiles.map(async ({file}) => {
+      const uploadedExtraUrls = []
+      for (const {file} of editExtraImageFiles) {
         const base64 = await fileToBase64(file)
         const res = await fetch(`${API_BASE}/api/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file.name, data: base64, contentType: file.type }) })
         if (!res.ok) throw new Error('Bild-uppladdning misslyckades')
-        return (await res.json()).url
-      }))
+        uploadedExtraUrls.push((await res.json()).url)
+      }
       const allExtraUrls = [...editExtraImages, ...uploadedExtraUrls]
 
       let finalContent = ''
@@ -682,9 +683,9 @@ function App() {
                 </label>
               ) : null}
               {!isEditing && selectedRecipe.extraImages?.length > 0 && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
+                <div className="flex flex-col gap-3">
                   {selectedRecipe.extraImages.map((url, i) => (
-                    <img key={i} src={url} alt="" className="w-28 h-28 object-cover rounded-xl shrink-0 cursor-pointer active:opacity-80"
+                    <img key={i} src={url} alt="" className="w-full rounded-2xl object-cover cursor-pointer active:opacity-80"
                       onClick={() => setLightboxImage(url)}
                       onError={(e) => { e.target.onerror = null; e.target.style.display = 'none' }} />
                   ))}

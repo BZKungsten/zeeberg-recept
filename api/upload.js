@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (!filename || !data) return res.status(400).json({ error: 'Missing data' })
 
   const ext = contentType?.includes('png') ? '.png' : contentType?.includes('webp') ? '.webp' : '.jpg'
-  const newFilename = `${Date.now()}${ext}`
+  const newFilename = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}${ext}`
 
   const putRes = await githubApi(`${IMAGES_DIR}/${newFilename}`, {
     method: 'PUT',
