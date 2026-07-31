@@ -87,6 +87,7 @@ function App() {
   const [editImageFile, setEditImageFile] = useState(null)
   const [editImagePreview, setEditImagePreview] = useState(null)
   const [editError, setEditError] = useState(null)
+  const [editSaving, setEditSaving] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [cropState, setCropState] = useState(null)
   const [crop, setCrop] = useState()
@@ -312,6 +313,7 @@ function App() {
   const handleSaveEdit = async () => {
     if (!editTitle.trim()) { setEditError('Receptnamn krävs'); return }
     setEditError(null)
+    setEditSaving(true)
     try {
       let finalImageUrl = editImageUrl
       if (editImageFile) {
@@ -358,6 +360,8 @@ function App() {
     } catch (error) {
       console.error(error)
       setEditError(error.message || 'Något gick fel')
+    } finally {
+      setEditSaving(false)
     }
   }
 
@@ -625,8 +629,10 @@ function App() {
               <div className="flex gap-2 shrink-0">
                 {isEditing ? (
                   <>
-                    <button type="button" onClick={handleSaveEdit} className="p-2 bg-[#6B8C6B] text-white hover:bg-[#5a7a5a] rounded-full transition-colors"><Check size={20} /></button>
-                    <button onClick={() => setIsEditing(false)} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
+                    <button type="button" onClick={handleSaveEdit} disabled={editSaving} className="px-4 py-2 bg-[#6B8C6B] text-white hover:bg-[#5a7a5a] rounded-full transition-colors disabled:opacity-60 text-sm font-semibold min-w-[72px]">
+                      {editSaving ? 'Sparar…' : <Check size={20} />}
+                    </button>
+                    <button onClick={() => { if (!editSaving) setIsEditing(false) }} disabled={editSaving} className="p-2 bg-slate-100 rounded-full disabled:opacity-40"><X size={20} /></button>
                   </>
                 ) : (
                   <>
