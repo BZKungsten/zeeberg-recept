@@ -1,5 +1,5 @@
 ![Receptbild](https://img.koket.se/standard-mega/fankalsrisotto-med-chili-timjan-och-mozzarella.jpg)
-![Extrabild](../RecipeImages/1785520341715.jpg)
+![Extrabild](../RecipeImages/1785520344968.jpg)
 
 Krämig och god risotto med fänkål, chili, vitt vin, parmesan, mozzarella och timjan. En vegetarisk rätt som kommer bli en ny favorit när du vill sätt guldkant på vardagen!
 
