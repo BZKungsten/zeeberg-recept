@@ -24,3 +24,5 @@ GÖR SÅ HÄR
 2. Häll bönorna i en sil, spola i kallt vatten och låt rinna av. Tillsätt bönorna i soppan, låt dem bli varma. Smaka av soppan med salt, peppar och eventuellt chiliflakes.
 3. Dillmajonnäs: Finhacka dillen och riv vitlöken. Mixa dill, vitlök och majonnäs med stavmixer. Smaka av med salt och peppar.
 4. Toppa soppan med dillmajonnäsen och servera gärna med parmesankrutonger.
+
+#Soppa #Vegetariskt
