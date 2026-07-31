@@ -26,6 +26,24 @@ const fileToBase64 = (file) => new Promise((resolve, reject) => {
   reader.readAsDataURL(file)
 })
 
+const compressImage = (file, maxPx = 1600, quality = 0.82) =>
+  new Promise(resolve => {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(img.width * scale)
+      canvas.height = Math.round(img.height * scale)
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+      URL.revokeObjectURL(url)
+      canvas.toBlob(blob => {
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }))
+      }, 'image/jpeg', quality)
+    }
+    img.src = url
+  })
+
 const getCroppedBlob = (image, crop) =>
   new Promise(resolve => {
     const canvas = document.createElement('canvas')
@@ -213,11 +231,12 @@ function App() {
     try {
       let finalPhotoUrl = formData.photoUrl
       if (imageFile) {
-        const base64 = await fileToBase64(imageFile)
+        const compressed = await compressImage(imageFile)
+        const base64 = await fileToBase64(compressed)
         const uploadRes = await fetch(`${API_BASE}/api/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: imageFile.name, data: base64, contentType: imageFile.type })
+          body: JSON.stringify({ filename: compressed.name, data: base64, contentType: compressed.type })
         })
         if (!uploadRes.ok) throw new Error('Kunde inte ladda upp bilden')
         const { url } = await uploadRes.json()
@@ -294,11 +313,12 @@ function App() {
     try {
       let finalImageUrl = editImageUrl
       if (editImageFile) {
-        const base64 = await fileToBase64(editImageFile)
+        const compressed = await compressImage(editImageFile)
+        const base64 = await fileToBase64(compressed)
         const uploadRes = await fetch(`${API_BASE}/api/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: editImageFile.name, data: base64, contentType: editImageFile.type })
+          body: JSON.stringify({ filename: compressed.name, data: base64, contentType: compressed.type })
         })
         if (!uploadRes.ok) throw new Error('Kunde inte ladda upp bilden')
         const { url } = await uploadRes.json()
@@ -306,8 +326,9 @@ function App() {
       }
       const uploadedExtraUrls = []
       for (const {file} of editExtraImageFiles) {
-        const base64 = await fileToBase64(file)
-        const res = await fetch(`${API_BASE}/api/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file.name, data: base64, contentType: file.type }) })
+        const compressed = await compressImage(file)
+        const base64 = await fileToBase64(compressed)
+        const res = await fetch(`${API_BASE}/api/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: compressed.name, data: base64, contentType: compressed.type }) })
         if (!res.ok) throw new Error('Bild-uppladdning misslyckades')
         uploadedExtraUrls.push((await res.json()).url)
       }
