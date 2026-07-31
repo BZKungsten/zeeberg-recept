@@ -633,7 +633,7 @@ function App() {
                           const f = e.target.files[0]
                           if (!f) return
                           setCrop(undefined); setCompletedCrop(null)
-                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, onConfirm: (file) => {
+                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
                             setEditImageFile(file)
                             setEditImagePreview(URL.createObjectURL(file))
                             setCropState(null)
@@ -652,7 +652,7 @@ function App() {
                     const f = e.target.files[0]
                     if (!f) return
                     setCrop(undefined); setCompletedCrop(null)
-                    setCropState({ src: URL.createObjectURL(f), originalName: f.name, onConfirm: (file) => {
+                    setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
                       setEditImageFile(file)
                       setEditImagePreview(URL.createObjectURL(file))
                       setCropState(null)
@@ -759,7 +759,7 @@ function App() {
                       const file = e.target.files[0]
                       if (!file) return
                       setCrop(undefined); setCompletedCrop(null)
-                      setCropState({ src: URL.createObjectURL(file), originalName: file.name, onConfirm: (f) => {
+                      setCropState({ src: URL.createObjectURL(file), originalName: file.name, originalFile: file, onConfirm: (f) => {
                         setImageFile(f)
                         setImagePreview(URL.createObjectURL(f))
                         setCropState(null)
@@ -843,23 +843,25 @@ function App() {
             </div>
             {completedCrop?.width > 0 && completedCrop?.height > 0
               ? <p className="text-center text-xs text-[#6B8C6B] pb-1">Område valt ✓</p>
-              : <p className="text-center text-xs text-slate-400 pb-1">Rita ett område att beskära</p>
+              : <p className="text-center text-xs text-slate-400 pb-1">Rita ett område att beskära, eller bekräfta som den är</p>
             }
             <div className="p-4 pt-1 flex gap-3">
               <button onClick={() => setCropState(null)} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
               <button
                 onClick={async () => {
-                  if (!imgRef.current || !completedCrop?.width || !completedCrop?.height) return
                   try {
-                    const blob = await getCroppedBlob(imgRef.current, completedCrop)
-                    const file = new File([blob], cropState.originalName || 'crop.jpg', { type: 'image/jpeg' })
-                    cropState.onConfirm(file)
+                    if (completedCrop?.width > 0 && completedCrop?.height > 0 && imgRef.current) {
+                      const blob = await getCroppedBlob(imgRef.current, completedCrop)
+                      const file = new File([blob], cropState.originalName || 'crop.jpg', { type: 'image/jpeg' })
+                      cropState.onConfirm(file)
+                    } else {
+                      cropState.onConfirm(cropState.originalFile)
+                    }
                   } catch (err) {
                     console.error('Crop error:', err)
                   }
                 }}
-                disabled={!completedCrop?.width || !completedCrop?.height}
-                className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold disabled:opacity-40"
+                className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold"
               >Bekräfta</button>
             </div>
           </div>
