@@ -1,6 +1,5 @@
 ![Receptbild](../RecipeImages/1785583720615_h5sbh.jpg)
-![Extrabild](../RecipeImages/1785583772673_znu81.jpg)
-![Extrabild](../RecipeImages/1785583775088_a5nb2.jpg)
+![Extrabild](../RecipeImages/1785583817806_q7ai6.jpg)
 
 Vanliga 
 Krispiga ”bacon”
