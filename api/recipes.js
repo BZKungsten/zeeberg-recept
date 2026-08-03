@@ -11,16 +11,13 @@ export default async function handler(req, res) {
     const mdFiles = files.filter(f => f.name.endsWith('.md'))
 
     const recipes = await Promise.all(mdFiles.map(async (f) => {
-      const contentRes = await fetch(f.download_url, {
-        headers: { 'Authorization': `Bearer ${process.env.GITHUB_TOKEN}` }
-      })
-      const content = await contentRes.text()
-      const imageMatch = content.match(/!\[.*?\]\((\.\.\/RecipeImages\/[^)]+)\)/)
-      const image = imageMatch ? imageMatch[1] : null
-      return { id: f.name, title: f.name.replace('.md', ''), content, image }
+      const contentRes = await githubApi(f.path)
+      if (!contentRes.ok) return null
+      const data = await contentRes.json()
+      const content = Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf-8')
+      return { id: f.name, title: f.name.replace('.md', ''), content }
     }))
-
-    return res.json(recipes)
+    return res.json(recipes.filter(Boolean))
   }
 
   if (req.method === 'POST') {

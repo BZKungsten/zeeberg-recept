@@ -469,6 +469,8 @@ function App() {
                           const allImgMatches1 = [...recipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
                           setEditExtraImages(allImgMatches1.slice(1).map(m => m[1]))
                           setEditExtraImageFiles([])
+                          setEditError(null)
+                          setEditSaving(false)
                           setSelectedRecipe(recipe)
                           setIsEditing(true)
                         }}
@@ -665,6 +667,8 @@ function App() {
                       const allImgMatches2 = [...selectedRecipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
                       setEditExtraImages(allImgMatches2.slice(1).map(m => m[1]))
                       setEditExtraImageFiles([])
+                      setEditError(null)
+                      setEditSaving(false)
                       setIsEditing(true)
                     }} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Pencil size={20} /></button>
                     <button onClick={() => setConfirmDelete(true)} className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-full transition-colors"><Trash2 size={20} /></button>
