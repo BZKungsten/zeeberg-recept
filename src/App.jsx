@@ -354,6 +354,19 @@ function App() {
         const err = await response.json().catch(() => ({}))
         throw new Error(err.error || `Serverfel ${response.status}`)
       }
+      const newId = editTitle.trim().replace(/[^a-z0-9åäöÅÄÖ]/gi, '_') + '.md'
+      const cleanedBody = finalContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+      const updatedRecipe = {
+        ...selectedRecipe,
+        id: newId,
+        name: editTitle.trim(),
+        fullContent: finalContent,
+        tags: editTags,
+        content: cleanedBody.substring(0, 90) + (cleanedBody.length > 90 ? '...' : ''),
+        image: finalImageUrl ? toDisplayUrl(finalImageUrl) : selectedRecipe.image,
+        extraImages: allExtraUrls.map(u => toDisplayUrl(u)).filter(Boolean),
+      }
+      setRecipes(prev => prev.map(r => r.id === selectedRecipe.id ? updatedRecipe : r))
       setIsEditing(false)
       setSelectedRecipe(null)
       fetchRecipes()
@@ -621,7 +634,8 @@ function App() {
       {selectedRecipe && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center sm:justify-center animate-fade-in" onClick={() => { setSelectedRecipe(null); setConfirmDelete(false); setIsEditing(false) }}>
           <div className="w-full h-[92vh] sm:max-w-2xl sm:max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl flex flex-col shadow-xl" onClick={e => e.stopPropagation()}>
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center shrink-0">
+            <div className="p-6 border-b border-slate-100 shrink-0">
+            <div className="flex justify-between items-center">
               {isEditing
                 ? <input value={editTitle} onChange={e => setEditTitle(e.target.value)} maxLength={50} className="text-base font-bold text-slate-900 border-b-2 border-[#6B8C6B] outline-none flex-1 mr-3 bg-transparent" />
                 : <h2 className="text-base font-bold text-slate-900 truncate min-w-0 flex-1 mr-3">{selectedRecipe.name}</h2>
@@ -659,6 +673,10 @@ function App() {
                 )}
               </div>
             </div>
+            {isEditing && editError && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{editError}</div>
+            )}
+          </div>
             <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-4">
               {confirmDelete && !isEditing && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4">
@@ -732,7 +750,6 @@ function App() {
               )}
               {isEditing ? (
                 <>
-                  {editError && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{editError}</div>}
                   <div>
                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Fler bilder</label>
                     <div className="flex flex-col gap-2">
