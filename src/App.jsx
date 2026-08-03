@@ -10,6 +10,27 @@ const GITHUB_CDN_BASE = import.meta.env.VITE_GITHUB_OWNER
   ? `https://raw.githubusercontent.com/${import.meta.env.VITE_GITHUB_OWNER}/${import.meta.env.VITE_GITHUB_REPO}/main`
   : ''
 
+const parseRecipeContent = (text) => {
+  const ingIdx = text.indexOf('## Ingredienser\n')
+  const descIdx = text.indexOf('## Beskrivning\n')
+  if (ingIdx !== -1 || descIdx !== -1) {
+    const ingEnd = descIdx !== -1 ? descIdx : text.length
+    return {
+      ingredients: ingIdx !== -1 ? text.slice(ingIdx + 16, ingEnd).trim() : '',
+      description: descIdx !== -1 ? text.slice(descIdx + 15).trim() : '',
+    }
+  }
+  const paragraphs = text.split(/\n\n+/)
+  const ingParas = []; const descParas = []; let doneWithIng = false
+  for (const para of paragraphs) {
+    const lines = para.trim().split('\n')
+    const ingCount = lines.filter(l => /^[\-\*•]|\d/.test(l.trim())).length
+    if (!doneWithIng && ingCount > lines.length * 0.5) { ingParas.push(para.trim()) }
+    else { doneWithIng = true; descParas.push(para.trim()) }
+  }
+  return { ingredients: ingParas.join('\n\n'), description: descParas.join('\n\n') }
+}
+
 const toDisplayUrl = (url) => {
   if (!url) return null
   if (url.startsWith('../RecipeImages/')) {
@@ -80,6 +101,7 @@ function App() {
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [editContent, setEditContent] = useState('')
+  const [editIngredients, setEditIngredients] = useState('')
   const [editTags, setEditTags] = useState([])
   const [editCustomTag, setEditCustomTag] = useState('')
   const [newCategoryInput, setNewCategoryInput] = useState('')
@@ -105,9 +127,10 @@ function App() {
     name: '',
     socialUrl: '',
     photoUrl: '',
+    ingredients: '',
     content: '',
     tags: [],
-    newCustomTag: '' // För att kunna skriva in helt egna taggar
+    newCustomTag: ''
   })
 
   // Fetch recipes from server
@@ -223,8 +246,8 @@ function App() {
 
   const handleAddRecipe = async (e) => {
     e.preventDefault()
-    if (!formData.name || !formData.content) {
-      setSubmitError('Vänligen fyll i både namn och recepttext.')
+    if (!formData.name || (!formData.ingredients && !formData.content)) {
+      setSubmitError('Vänligen fyll i receptnamn samt ingredienser eller beskrivning.')
       return
     }
 
@@ -247,20 +270,11 @@ function App() {
       }
 
       let recipeContent = ''
-
-      if (finalPhotoUrl) {
-        recipeContent += `![Receptbild](${finalPhotoUrl})\n\n`
-      }
-      
-      recipeContent += formData.content
-      
-      if (formData.socialUrl) {
-        recipeContent += `\n\n[Källa: ${formData.socialUrl}]`
-      }
-
-      if (formData.tags.length > 0) {
-        recipeContent += `\n\n${formData.tags.map(tag => `#${tag}`).join(' ')}`
-      }
+      if (finalPhotoUrl) recipeContent += `![Receptbild](${finalPhotoUrl})\n\n`
+      if (formData.ingredients.trim()) recipeContent += `## Ingredienser\n${formData.ingredients.trim()}\n\n`
+      if (formData.content.trim())     recipeContent += `## Beskrivning\n${formData.content.trim()}`
+      if (formData.socialUrl)          recipeContent += `\n\n[Källa: ${formData.socialUrl}]`
+      if (formData.tags.length > 0)    recipeContent += `\n\n${formData.tags.map(tag => `#${tag}`).join(' ')}`
 
       const response = await fetch(`${API_BASE}/api/recipes`, {
         method: 'POST',
@@ -276,7 +290,7 @@ function App() {
         throw new Error(err.error || `Serverfel ${response.status}`)
       }
 
-      setFormData({ name: '', socialUrl: '', photoUrl: '', tags: [], content: '', newCustomTag: '' })
+      setFormData({ name: '', socialUrl: '', photoUrl: '', ingredients: '', content: '', tags: [], newCustomTag: '' })
       setImageFile(null)
       setImagePreview(null)
       setShowAddForm(false)
@@ -342,8 +356,9 @@ function App() {
       if (finalImageUrl) finalContent += `![Receptbild](${finalImageUrl})\n`
       allExtraUrls.forEach(url => { finalContent += `![Extrabild](${url})\n` })
       if (finalImageUrl || allExtraUrls.length > 0) finalContent += '\n'
-      finalContent += editContent.trim()
-      if (editTags.length > 0) finalContent += `\n\n${editTags.map(t => `#${t}`).join(' ')}`
+      if (editIngredients.trim()) finalContent += `## Ingredienser\n${editIngredients.trim()}\n\n`
+      if (editContent.trim())     finalContent += `## Beskrivning\n${editContent.trim()}\n`
+      if (editTags.length > 0)    finalContent += `\n\n${editTags.map(t => `#${t}`).join(' ')}`
 
       const response = await fetch(`${API_BASE}/api/recipes/${encodeURIComponent(selectedRecipe.id)}`, {
         method: 'PUT',
@@ -460,7 +475,10 @@ function App() {
                           e.stopPropagation()
                           const imageMatch = recipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
                           setEditTitle(recipe.name)
-                          setEditContent(recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim())
+                          const rawText1 = recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+                          const parsed1 = parseRecipeContent(rawText1)
+                          setEditIngredients(parsed1.ingredients)
+                          setEditContent(parsed1.description)
                           setEditTags([...recipe.tags])
                           setEditImageUrl(imageMatch ? imageMatch[1] : null)
                           setEditImageFile(null)
@@ -655,10 +673,10 @@ function App() {
                     <button onClick={() => {
                       const imageMatch = selectedRecipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
                       setEditTitle(selectedRecipe.name)
-                      setEditContent(selectedRecipe.fullContent
-                        .replace(/!\[.*?\]\(.*?\)\n\n?/g, '')
-                        .replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '')
-                        .trim())
+                      const rawText2 = selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+                      const parsed2 = parseRecipeContent(rawText2)
+                      setEditIngredients(parsed2.ingredients)
+                      setEditContent(parsed2.description)
                       setEditTags([...selectedRecipe.tags])
                       setEditImageUrl(imageMatch ? imageMatch[1] : null)
                       setEditImageFile(null)
@@ -789,7 +807,14 @@ function App() {
                       </label>
                     </div>
                   </div>
-                  <textarea value={editContent} onChange={e => setEditContent(e.target.value)} rows={12} className="w-full p-4 text-sm text-slate-700 bg-slate-50 border border-[#9ab89a] rounded-2xl outline-none focus:ring-2 focus:ring-[#6B8C6B] resize-none" />
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Ingredienser</label>
+                    <textarea value={editIngredients} onChange={e => setEditIngredients(e.target.value)} rows={7} placeholder={"4 portioner\n- 200g pasta\n- 1 gul lök"} className="w-full p-4 text-sm text-slate-700 bg-slate-50 border border-[#9ab89a] rounded-2xl outline-none focus:ring-2 focus:ring-[#6B8C6B] resize-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Beskrivning</label>
+                    <textarea value={editContent} onChange={e => setEditContent(e.target.value)} rows={8} className="w-full p-4 text-sm text-slate-700 bg-slate-50 border border-[#9ab89a] rounded-2xl outline-none focus:ring-2 focus:ring-[#6B8C6B] resize-none" />
+                  </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Kategorier</label>
                     <div className="flex flex-wrap gap-1.5 p-2 border rounded-xl bg-slate-50 mb-2">
@@ -819,7 +844,26 @@ function App() {
                 </>
               ) : (
                 <>
-                  <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()}</div>
+                  {(() => {
+                    const rawView = selectedRecipe.fullContent.replace(/!\[.*?\]\(.*?\)\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+                    const { ingredients: vi, description: vd } = parseRecipeContent(rawView)
+                    return (
+                      <>
+                        {vi && (
+                          <div>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Ingredienser</p>
+                            <div className="whitespace-pre-wrap text-slate-700 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">{vi}</div>
+                          </div>
+                        )}
+                        {vd && (
+                          <div>
+                            {vi && <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Beskrivning</p>}
+                            <div className="whitespace-pre-wrap text-slate-700 text-base leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-100">{vd}</div>
+                          </div>
+                        )}
+                      </>
+                    )
+                  })()}
                   {allTags.length > 0 && (
                     <div>
                       <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategorier</p>
@@ -878,8 +922,13 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Beskrivning & Ingredienser *</label>
-                <textarea required rows="5" value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} placeholder="Klistra in recept eller skriv instruktioner här..." className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#6B8C6B] outline-none resize-none" />
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ingredienser</label>
+                <textarea rows="6" value={formData.ingredients} onChange={e => setFormData({...formData, ingredients: e.target.value})} placeholder="- 200g pasta&#10;- 1 lök&#10;- 2 vitlöksklyftor" className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#6B8C6B] outline-none resize-none" />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Beskrivning</label>
+                <textarea rows="5" value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} placeholder="Klistra in recept eller skriv instruktioner här..." className="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#6B8C6B] outline-none resize-none" />
               </div>
 
               <div>
