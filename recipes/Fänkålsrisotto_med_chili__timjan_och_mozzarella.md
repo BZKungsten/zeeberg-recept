@@ -1,12 +1,6 @@
 ![Receptbild](https://img.koket.se/standard-mega/fankalsrisotto-med-chili-timjan-och-mozzarella.jpg)
 
-Krämig och god risotto med fänkål, chili, vitt vin, parmesan, mozzarella och timjan. En vegetarisk rätt som kommer bli en ny favorit när du vill sätt guldkant på vardagen!
-
-Total: 45 min
-
-Portioner: 4 portioner
-
-Ingredienser: lopp
+## Ingredienser
 - 1 gul lök (stor)
 - 4 klyftor vitlök
 - 2 stjälkar stjälkselleri
@@ -25,6 +19,16 @@ Ingredienser: lopp
 - färsk timjan
 - 2 msk olivolja
 
+## Beskrivning
+Krämig och god risotto med fänkål, chili, vitt vin, parmesan, mozzarella och timjan. En vegetarisk rätt som kommer bli en ny favorit när du vill sätt guldkant på vardagen!
+
+Total: 45 min
+
+Portioner: 4 portioner
+
+Ingredienser: lopp
+
+
 Instruktioner:
 1. Skala och hacka lök och vitlök fint. Skiva sellerin och fänkålen tunt.
 2. Hetta upp en stor kastrull med 5 msk olivolja. Stek lök, vitlök, selleri, fänkål och chiliflakes på medelvärme tills löken är mjuk.
@@ -35,5 +39,6 @@ Instruktioner:
 7. Ta av risotton från värmen, tillsätt salt, peppar, smör och riven parmesan.
 8. Riv mozzarellan i mindre bitar.
 9. Lägg upp risotton, strö över mozzarella, timjan, chiliflakes och ringla över resterande 2 msk olja.
+
 
 #Vegetariskt
