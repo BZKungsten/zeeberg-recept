@@ -7,7 +7,7 @@ import './App.css'
 const API_BASE = ''
 
 const GITHUB_CDN_BASE = import.meta.env.VITE_GITHUB_OWNER
-  ? `https://cdn.jsdelivr.net/gh/${import.meta.env.VITE_GITHUB_OWNER}/${import.meta.env.VITE_GITHUB_REPO}@main`
+  ? `https://raw.githubusercontent.com/${import.meta.env.VITE_GITHUB_OWNER}/${import.meta.env.VITE_GITHUB_REPO}/main`
   : ''
 
 const toDisplayUrl = (url) => {
