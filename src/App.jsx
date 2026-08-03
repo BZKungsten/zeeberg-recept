@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { UtensilsCrossed, Plus, Grid3x3, List, Search, X, Share2, CheckCircle2, Trash2, Camera, ImagePlus, Pencil, Check } from 'lucide-react'
+import { UtensilsCrossed, Plus, Grid3x3, List, Search, X, Share2, CheckCircle2, Trash2, Camera, ImagePlus, Pencil, Check, ShoppingCart } from 'lucide-react'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import './App.css'
@@ -122,6 +122,10 @@ function App() {
   const [importUrl, setImportUrl] = useState('')
   const [importLoading, setImportLoading] = useState(false)
   const [importError, setImportError] = useState(null)
+  const [shoppingList, setShoppingList] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('shopping_list')) || [] } catch { return [] }
+  })
+  const [ingredientChecks, setIngredientChecks] = useState({})
 
   const [formData, setFormData] = useState({
     name: '',
@@ -189,6 +193,19 @@ function App() {
       .then(data => Array.isArray(data) && setCategories(data))
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem('shopping_list', JSON.stringify(shoppingList))
+  }, [shoppingList])
+
+  useEffect(() => {
+    if (!selectedRecipe) { setIngredientChecks({}); return }
+    const raw = selectedRecipe.fullContent
+      .replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+    const { ingredients } = parseRecipeContent(raw)
+    const lines = ingredients.split('\n').filter(l => l.trim())
+    setIngredientChecks(Object.fromEntries(lines.map((_, i) => [i, true])))
+  }, [selectedRecipe?.id])
 
   const allTags = Array.from(
     new Set([...categories, ...recipes.flatMap(r => r.tags)])
@@ -391,6 +408,19 @@ function App() {
     } finally {
       setEditSaving(false)
     }
+  }
+
+  const handleAddToShoppingList = () => {
+    if (!selectedRecipe) return
+    const raw = selectedRecipe.fullContent
+      .replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+    const { ingredients } = parseRecipeContent(raw)
+    const lines = ingredients.split('\n').filter(l => l.trim())
+    const toAdd = lines
+      .filter((_, i) => ingredientChecks[i] !== false)
+      .map(text => ({ id: `${Date.now()}-${Math.random()}`, text, done: false, fromRecipe: selectedRecipe.name }))
+    if (toAdd.length === 0) return
+    setShoppingList(prev => [...prev, ...toAdd])
   }
 
   const handleDeleteRecipe = async (recipe) => {
@@ -852,7 +882,22 @@ function App() {
                         {vi && (
                           <div>
                             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Ingredienser</p>
-                            <div className="whitespace-pre-wrap text-slate-700 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">{vi}</div>
+                            <div className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden">
+                              {vi.split('\n').filter(l => l.trim()).map((line, i) => (
+                                <button key={i} type="button"
+                                  onClick={() => setIngredientChecks(prev => ({ ...prev, [i]: prev[i] === false ? true : false }))}
+                                  className={`flex items-center gap-3 w-full px-4 py-2.5 text-left border-b border-slate-100 last:border-0 transition-colors ${ingredientChecks[i] === false ? 'opacity-40' : ''}`}>
+                                  <span className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${ingredientChecks[i] === false ? 'border-slate-300 bg-white' : 'border-[#6B8C6B] bg-[#6B8C6B]'}`}>
+                                    {ingredientChecks[i] !== false && <Check size={11} className="text-white" strokeWidth={3} />}
+                                  </span>
+                                  <span className={`text-sm text-slate-700 ${ingredientChecks[i] === false ? 'line-through' : ''}`}>{line}</span>
+                                </button>
+                              ))}
+                            </div>
+                            <button type="button" onClick={handleAddToShoppingList}
+                              className="mt-3 w-full py-2.5 rounded-2xl bg-[#6B8C6B] text-white text-sm font-semibold flex items-center justify-center gap-2 active:opacity-80 hover:bg-[#5a7a5a] transition-colors">
+                              <ShoppingCart size={16} /> Lägg till i inköpslistan
+                            </button>
                           </div>
                         )}
                         {vd && (
@@ -883,6 +928,51 @@ function App() {
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Inköpslista */}
+      {activeTab === 'shopping' && (
+        <div className="max-w-xl mx-auto px-4 pt-6 pb-28">
+          <div className="flex justify-between items-center mb-5">
+            <h2 className="text-2xl font-black text-slate-900">Inköpslista</h2>
+            {shoppingList.some(i => i.done) && (
+              <button onClick={() => setShoppingList(prev => prev.filter(i => !i.done))}
+                className="text-sm text-[#6B8C6B] font-semibold">Rensa klara</button>
+            )}
+          </div>
+          {shoppingList.length === 0 ? (
+            <div className="text-center py-16 text-slate-400">
+              <ShoppingCart size={48} className="mx-auto mb-4 opacity-30" />
+              <p className="text-sm">Inga varor ännu</p>
+              <p className="text-xs mt-1">Gå till ett recept och tryck Lägg till</p>
+            </div>
+          ) : (
+            <>
+              {Array.from(new Set(shoppingList.map(i => i.fromRecipe))).map(recipe => (
+                <div key={recipe} className="mb-5">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">{recipe}</p>
+                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    {shoppingList.filter(i => i.fromRecipe === recipe).map(item => (
+                      <div key={item.id} className="flex items-center gap-3 px-4 py-3 border-b border-slate-50 last:border-0">
+                        <button type="button"
+                          onClick={() => setShoppingList(prev => prev.map(i => i.id === item.id ? {...i, done: !i.done} : i))}
+                          className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.done ? 'bg-[#6B8C6B] border-[#6B8C6B]' : 'border-slate-300'}`}>
+                          {item.done && <Check size={11} className="text-white" strokeWidth={3} />}
+                        </button>
+                        <span className={`flex-1 text-sm ${item.done ? 'line-through text-slate-400' : 'text-slate-700'}`}>{item.text}</span>
+                        <button type="button"
+                          onClick={() => setShoppingList(prev => prev.filter(i => i.id !== item.id))}
+                          className="text-slate-300 hover:text-slate-500 p-1"><X size={15} /></button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <button onClick={() => setShoppingList([])}
+                className="w-full mt-2 py-2.5 text-sm text-slate-400 font-medium">Rensa allt</button>
+            </>
+          )}
         </div>
       )}
 
@@ -1003,20 +1093,30 @@ function App() {
             <span className="text-xs font-medium">Recept</span>
           </button>
 
+          <button onClick={() => setActiveTab('shopping')} className={`flex flex-col items-center gap-1 ${activeTab === 'shopping' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+            <div className="relative">
+              <ShoppingCart size={22} />
+              {shoppingList.filter(i => !i.done).length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#6B8C6B] text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {shoppingList.filter(i => !i.done).length > 9 ? '9+' : shoppingList.filter(i => !i.done).length}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-medium">Inköp</span>
+          </button>
+
           <button onClick={() => setShowAddForm(true)} className="w-14 h-14 bg-[#6B8C6B] rounded-full flex items-center justify-center text-white shadow-md transform -translate-y-4 hover:scale-105 active:scale-95 transition-all">
             <Plus size={28} />
           </button>
 
-          <div className="flex gap-4 items-center">
-            <button onClick={() => setActiveTab('categories-grid')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-grid' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
-              <Grid3x3 size={22} />
-              <span className="text-xs font-medium">Rutnät</span>
-            </button>
-            <button onClick={() => setActiveTab('categories-list')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-list' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
-              <List size={22} />
-              <span className="text-xs font-medium">Lista</span>
-            </button>
-          </div>
+          <button onClick={() => setActiveTab('categories-grid')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-grid' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+            <Grid3x3 size={22} />
+            <span className="text-xs font-medium">Rutnät</span>
+          </button>
+          <button onClick={() => setActiveTab('categories-list')} className={`flex flex-col items-center gap-1 ${activeTab === 'categories-list' ? 'text-[#6B8C6B]' : 'text-slate-400'}`}>
+            <List size={22} />
+            <span className="text-xs font-medium">Lista</span>
+          </button>
         </div>
       </div>
 
