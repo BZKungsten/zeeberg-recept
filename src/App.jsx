@@ -419,7 +419,6 @@ function App() {
       setRecipes(prev => prev.map(r => r.id === selectedRecipe.id ? updatedRecipe : r))
       setIsEditing(false)
       setSelectedRecipe(null)
-      fetchRecipes()
     } catch (error) {
       console.error(error)
       setEditError(error.message || 'Något gick fel')
