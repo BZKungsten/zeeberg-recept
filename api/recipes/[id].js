@@ -1,9 +1,8 @@
 import { githubApi, getFileSha, encode } from '../_github.js'
 
-const RECIPES_DIR = 'recipes'
-
 export default async function handler(req, res) {
   const { id } = req.query
+  const recipesDir = req.query.vault ? `recipes/${req.query.vault}` : 'recipes'
 
   if (req.method === 'PUT') {
     const { title, content } = req.body
@@ -13,20 +12,20 @@ export default async function handler(req, res) {
     const newFileName = `${title.replace(/[^a-z0-9åäöÅÄÖ]/gi, '_')}.md`
 
     if (oldFileName !== newFileName) {
-      const oldSha = await getFileSha(`${RECIPES_DIR}/${oldFileName}`)
+      const oldSha = await getFileSha(`${recipesDir}/${oldFileName}`)
       if (oldSha) {
-        await githubApi(`${RECIPES_DIR}/${oldFileName}`, {
+        await githubApi(`${recipesDir}/${oldFileName}`, {
           method: 'DELETE',
           body: JSON.stringify({ message: `Rename: ${oldFileName}`, sha: oldSha })
         })
       }
     }
 
-    const sha = await getFileSha(`${RECIPES_DIR}/${newFileName}`)
+    const sha = await getFileSha(`${recipesDir}/${newFileName}`)
     const body = { message: `Update: ${newFileName}`, content: encode(content) }
     if (sha) body.sha = sha
 
-    const putRes = await githubApi(`${RECIPES_DIR}/${newFileName}`, {
+    const putRes = await githubApi(`${recipesDir}/${newFileName}`, {
       method: 'PUT',
       body: JSON.stringify(body)
     })
@@ -36,10 +35,10 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
-    const sha = await getFileSha(`${RECIPES_DIR}/${id}`)
+    const sha = await getFileSha(`${recipesDir}/${id}`)
     if (!sha) return res.status(404).json({ error: 'Not found' })
 
-    const delRes = await githubApi(`${RECIPES_DIR}/${id}`, {
+    const delRes = await githubApi(`${recipesDir}/${id}`, {
       method: 'DELETE',
       body: JSON.stringify({ message: `Delete: ${id}`, sha })
     })

@@ -1,10 +1,10 @@
 import { githubApi, encode } from './_github.js'
 
-const RECIPES_DIR = 'recipes'
-
 export default async function handler(req, res) {
+  const recipesDir = req.query.vault ? `recipes/${req.query.vault}` : 'recipes'
+
   if (req.method === 'GET') {
-    const listRes = await githubApi(RECIPES_DIR)
+    const listRes = await githubApi(recipesDir)
     if (!listRes.ok) return res.json([])
 
     const files = await listRes.json()
@@ -26,14 +26,14 @@ export default async function handler(req, res) {
     if (!title || !finalContent) return res.status(400).json({ error: 'Missing fields' })
 
     const fileName = `${title.replace(/[^a-z0-9åäöÅÄÖ]/gi, '_')}.md`
-    const putRes = await githubApi(`${RECIPES_DIR}/${encodeURIComponent(fileName)}`, {
+    const putRes = await githubApi(`${recipesDir}/${encodeURIComponent(fileName)}`, {
       method: 'PUT',
       body: JSON.stringify({ message: `Add recipe: ${fileName}`, content: encode(finalContent), branch: 'main' })
     })
 
     if (!putRes.ok) {
       const ghErr = await putRes.json().catch(() => ({}))
-      const debugUrl = `repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/contents/${RECIPES_DIR}/${fileName}`
+      const debugUrl = `repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/contents/${recipesDir}/${fileName}`
       return res.status(500).json({ error: `GitHub ${putRes.status}: ${ghErr.message || '?'} | URL: ${debugUrl}` })
     }
     return res.status(201).json({ message: 'Saved', id: fileName })

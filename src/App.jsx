@@ -40,6 +40,8 @@ const toDisplayUrl = (url) => {
   return url
 }
 
+const vaultParam = (vault) => vault ? `?vault=${encodeURIComponent(vault)}` : ''
+
 const fileToBase64 = (file) => new Promise((resolve, reject) => {
   const reader = new FileReader()
   reader.onload = (e) => resolve(e.target.result.split(',')[1])
@@ -127,6 +129,15 @@ function App() {
   })
   const [ingredientChecks, setIngredientChecks] = useState({})
   const [cartAdded, setCartAdded] = useState(false)
+  const [vault] = useState(() => {
+    const hash = window.location.hash.slice(1)
+    if (hash) {
+      const name = decodeURIComponent(hash)
+      localStorage.setItem('vault', name)
+      return name
+    }
+    return localStorage.getItem('vault') || ''
+  })
 
   const [formData, setFormData] = useState({
     name: '',
@@ -141,7 +152,7 @@ function App() {
   // Fetch recipes from server
   const fetchRecipes = async () => {
     try {
-      const response = await fetch(`${API_BASE}/api/recipes`)
+      const response = await fetch(`${API_BASE}/api/recipes${vaultParam(vault)}`)
       const data = await response.json()
 
       const processedRecipes = data.map((file, index) => {
@@ -186,6 +197,12 @@ function App() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname)
+    }
+  }, [])
 
   useEffect(() => {
     fetchRecipes()
@@ -294,7 +311,7 @@ function App() {
       if (formData.socialUrl)          recipeContent += `\n\n[Källa: ${formData.socialUrl}]`
       if (formData.tags.length > 0)    recipeContent += `\n\n${formData.tags.map(tag => `#${tag}`).join(' ')}`
 
-      const response = await fetch(`${API_BASE}/api/recipes`, {
+      const response = await fetch(`${API_BASE}/api/recipes${vaultParam(vault)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -378,7 +395,7 @@ function App() {
       if (editContent.trim())     finalContent += `## Beskrivning\n${editContent.trim()}\n`
       if (editTags.length > 0)    finalContent += `\n\n${editTags.map(t => `#${t}`).join(' ')}`
 
-      const response = await fetch(`${API_BASE}/api/recipes/${encodeURIComponent(selectedRecipe.id)}`, {
+      const response = await fetch(`${API_BASE}/api/recipes/${encodeURIComponent(selectedRecipe.id)}${vaultParam(vault)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: editTitle.trim(), content: finalContent })
@@ -428,7 +445,7 @@ function App() {
 
   const handleDeleteRecipe = async (recipe) => {
     try {
-      const response = await fetch(`${API_BASE}/api/recipes/${encodeURIComponent(recipe.id)}`, { method: 'DELETE' })
+      const response = await fetch(`${API_BASE}/api/recipes/${encodeURIComponent(recipe.id)}${vaultParam(vault)}`, { method: 'DELETE' })
       if (!response.ok) throw new Error('Kunde inte radera')
       setSelectedRecipe(null)
       setConfirmDelete(false)
@@ -452,7 +469,10 @@ function App() {
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="px-6 py-6">
             <div className="mb-4">
-              <h1 className="text-2xl font-black tracking-[0.2em] uppercase" style={{fontFamily: "'Montserrat', sans-serif"}}><span className="text-slate-900">ZEEBERG </span><span className="text-[#6B8C6B]">RECEPT</span></h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-black tracking-[0.2em] uppercase" style={{fontFamily: "'Montserrat', sans-serif"}}><span className="text-slate-900">ZEEBERG </span><span className="text-[#6B8C6B]">RECEPT</span></h1>
+                {vault && <span className="text-xs font-semibold text-[#4a6e4a] bg-[#f0f5f0] border border-[#9ab89a] px-2.5 py-1 rounded-full">{vault}</span>}
+              </div>
               <p className="text-sm text-slate-500 mt-1">Familjens sparade mat- och drycktips</p>
             </div>
             <div className="relative">
