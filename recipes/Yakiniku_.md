@@ -1,5 +1,6 @@
 ![Receptbild](https://images.arla.com/recordid/15B06EED-4A42-47A7-A693EB61EF790735/yakiniku.jpg?width=1300&height=525&mode=crop&crop=(0,251,0,-280)
 
+## Beskrivning
 Yakiniku är en snabblagad japansk klassiker. Den krämiga kålsalladen passar fint till det kryddiga köttet. Servera med rostade sesamfrön, salladslök, ris och lime.
 
 Prep: 30 min | Tillagning: 00 min | Total: 1 h 30 min
@@ -27,5 +28,6 @@ Ingredienser:
 - 2 msk rostade sesamfrön
 
 Instruktioner:
+
 
 #Kött #Asiatisk
