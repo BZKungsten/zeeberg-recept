@@ -1,11 +1,73 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="112" fill="#6B8C6B"/>
-  <g stroke="white" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 241 195 Q 236 154 256 144 Q 277 154 272 195"/>
-    <path d="M 128 266 Q 128 174 256 159 Q 384 174 384 266"/>
-    <line x1="113" y1="266" x2="399" y2="266"/>
-    <path d="M 128 266 Q 113 379 256 390 Q 399 379 384 266"/>
-    <path d="M 128 292 Q 72 292 72 333 Q 72 374 128 374"/>
-    <path d="M 384 292 Q 440 292 440 333 Q 440 374 384 374"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#7aa07a"/>
+      <stop offset="100%" stop-color="#567856"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- Steam (two wavy S-curves) -->
+  <path d="M 192 158 C 170 135 210 112 188 88 C 166 64 206 42"
+        stroke="white" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <path d="M 238 152 C 216 129 256 106 234 82 C 212 58 252 36"
+        stroke="white" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Spoon (upper right, rotated) -->
+  <g transform="rotate(-32 372 108)">
+    <ellipse cx="372" cy="97" rx="22" ry="16" fill="white"/>
+    <rect x="366" y="113" width="12" height="96" rx="6" fill="white"/>
   </g>
+
+  <!-- Lid knob -->
+  <ellipse cx="240" cy="168" rx="11" ry="8" fill="white"/>
+  <rect x="233" y="168" width="14" height="26" rx="5" fill="white"/>
+
+  <!-- Pot lid -->
+  <ellipse cx="240" cy="198" rx="132" ry="20" fill="white"/>
+
+  <!-- Left handle -->
+  <path d="M 108 230 C 68 230 68 288 108 288"
+        stroke="white" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+  <!-- Right handle -->
+  <path d="M 372 230 C 412 230 412 288 372 288"
+        stroke="white" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+  <!-- Pot body -->
+  <rect x="108" y="198" width="264" height="166" rx="24" fill="white"/>
+
+  <!-- ReZept text on pot -->
+  <text x="240" y="282" text-anchor="middle" dominant-baseline="middle"
+        font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+        font-weight="900" font-size="52" fill="#6B8C6B">ReZept</text>
+
+  <!-- Open book — left page -->
+  <path d="M 88 462 L 91 368 Q 162 347 237 350 L 237 453 Q 160 458 88 462 Z" fill="white"/>
+
+  <!-- Open book — right page -->
+  <path d="M 392 462 L 389 368 Q 318 347 243 350 L 243 453 Q 320 458 392 462 Z" fill="white"/>
+
+  <!-- Book bottom oval (spine) -->
+  <ellipse cx="240" cy="462" rx="152" ry="9" fill="white"/>
+
+  <!-- Text lines on left page -->
+  <line x1="113" y1="382" x2="210" y2="378" stroke="#6B8C6B" stroke-width="7" stroke-linecap="round"/>
+  <line x1="113" y1="398" x2="210" y2="395" stroke="#6B8C6B" stroke-width="7" stroke-linecap="round"/>
+  <line x1="113" y1="414" x2="210" y2="412" stroke="#6B8C6B" stroke-width="7" stroke-linecap="round"/>
+  <line x1="113" y1="430" x2="192" y2="429" stroke="#6B8C6B" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Fork on right page (tines + handle) -->
+  <line x1="270" y1="368" x2="270" y2="393" stroke="#6B8C6B" stroke-width="6" stroke-linecap="round"/>
+  <line x1="279" y1="368" x2="279" y2="393" stroke="#6B8C6B" stroke-width="6" stroke-linecap="round"/>
+  <line x1="288" y1="368" x2="288" y2="393" stroke="#6B8C6B" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 270 393 Q 274 404 279 406 Q 284 404 288 393"
+        stroke="#6B8C6B" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <line x1="279" y1="406" x2="279" y2="450" stroke="#6B8C6B" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Knife on right page -->
+  <line x1="322" y1="368" x2="322" y2="450" stroke="#6B8C6B" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 322 368 C 340 374 342 393 322 402" fill="#6B8C6B"/>
 </svg>
