@@ -1,13 +1,6 @@
 ![Receptbild](https://assets.icanet.se/t_ICAseAbsoluteUrl/imagevaultfiles/id_180566/cf_259/sallad_pa_grillad_sparris__krispigt_bacon_och_parmesan.jpg)
 
-## Beskrivning
-Tänk dig den gyllene kombinationen av grillad sparris och saltkrispiga bacontärningar. Sedan lägger du till finriven parmesanost, schalottenlök och en frisk dressing med smak av färsk persilja och citron. En given favorit på buffébordet!
-
-Total: 30 min
-
-Portioner: 4
-
-Ingredienser:
+## Ingredienser
 - 2 schalottenlökar
 - skal av 1 citron
 - 2 msk färskpressad citronsaft
@@ -20,6 +13,15 @@ Ingredienser:
 - 350 g skivat grillbacon
 - 100 g parmesan
 - bladpersilja
+
+## Beskrivning
+Tänk dig den gyllene kombinationen av grillad sparris och saltkrispiga bacontärningar. Sedan lägger du till finriven parmesanost, schalottenlök och en frisk dressing med smak av färsk persilja och citron. En given favorit på buffébordet!
+
+Total: 30 min
+
+Portioner: 4
+
+Ingredienser:
 
 Instruktioner:
 1. Vinägrett: Skala och hacka löken fint. Skölj och skrubba citronen i ljummet vatten. Riv det yttersta skalet av citronen och pressa ur saften. Hacka persiljan.
