@@ -1,5 +1,6 @@
 ![Receptbild](https://assets.icanet.se/t_ICAseAbsoluteUrl/imagevaultfiles/id_180566/cf_259/sallad_pa_grillad_sparris__krispigt_bacon_och_parmesan.jpg)
 
+## Beskrivning
 Tänk dig den gyllene kombinationen av grillad sparris och saltkrispiga bacontärningar. Sedan lägger du till finriven parmesanost, schalottenlök och en frisk dressing med smak av färsk persilja och citron. En given favorit på buffébordet!
 
 Total: 30 min
@@ -28,5 +29,6 @@ Instruktioner:
 5. Lägg sparrisarna på en skärbräda. Skär stjälkarna på snedden i mindre bitar. Blanda dem med vinägretten.
 6. Grilla baconet och skär det sedan i bitar.
 7. Till garnering: Lägg upp sparrisarna och toppa med baconet och finriv parmesanost över precis innan servering. Garnera med bladpersilja.
+
 
 #Kött #Sallad
