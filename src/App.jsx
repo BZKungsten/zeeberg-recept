@@ -126,6 +126,7 @@ function App() {
     try { return JSON.parse(localStorage.getItem('shopping_list')) || [] } catch { return [] }
   })
   const [ingredientChecks, setIngredientChecks] = useState({})
+  const [cartAdded, setCartAdded] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -421,6 +422,8 @@ function App() {
       .map(text => ({ id: `${Date.now()}-${Math.random()}`, text, done: false, fromRecipe: selectedRecipe.name }))
     if (toAdd.length === 0) return
     setShoppingList(prev => [...prev, ...toAdd])
+    setCartAdded(true)
+    setTimeout(() => setCartAdded(false), 2000)
   }
 
   const handleDeleteRecipe = async (recipe) => {
@@ -894,9 +897,9 @@ function App() {
                                 </button>
                               ))}
                             </div>
-                            <button type="button" onClick={handleAddToShoppingList}
-                              className="mt-3 w-full py-2.5 rounded-2xl bg-[#6B8C6B] text-white text-sm font-semibold flex items-center justify-center gap-2 active:opacity-80 hover:bg-[#5a7a5a] transition-colors">
-                              <ShoppingCart size={16} /> Lägg till i inköpslistan
+                            <button type="button" onClick={handleAddToShoppingList} disabled={cartAdded}
+                              className={`mt-3 w-full py-2.5 rounded-2xl text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all ${cartAdded ? 'bg-[#4a7a4a]' : 'bg-[#6B8C6B] hover:bg-[#5a7a5a] active:opacity-80'}`}>
+                              {cartAdded ? <><Check size={16} strokeWidth={3} /> Tillagd i inköpslistan!</> : <><ShoppingCart size={16} /> Lägg till i inköpslistan</>}
                             </button>
                           </div>
                         )}
