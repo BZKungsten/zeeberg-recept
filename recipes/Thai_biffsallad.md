@@ -1,12 +1,6 @@
 ![Receptbild](https://img.koket.se/standard-mega/thai-biffsallad.png.jpg)
 
-En underbart smakrik sallad där dressingen spelar huvudrollen. Hemligheten är rostat jasminris som pulveriseras - ja, men ni hör ju, den här salladen får ni bara inte missa. Perfekt som lunch, middag och allt därtill - sommarens absoluta favorit.
-
-Total: 40 min
-
-Portioner: 4 portioner
-
-Ingredienser:
+## Ingredienser
 - Sallad
 - 600-800 g entrecôte (eller ryggbiff)
 - 1 huvudsallad
@@ -28,6 +22,15 @@ Ingredienser:
 - Rispulver
 - 1 dl jasminris
 
+## Beskrivning
+En underbart smakrik sallad där dressingen spelar huvudrollen. Hemligheten är rostat jasminris som pulveriseras - ja, men ni hör ju, den här salladen får ni bara inte missa. Perfekt som lunch, middag och allt därtill - sommarens absoluta favorit.
+
+Total: 40 min
+
+Portioner: 4 portioner
+
+Ingredienser:
+
 Instruktioner:
 1. Rispulver
 2. Rosta jasminriset i en torr panna på medelhög värme tills det är gyllene och doftar nötigt.
@@ -41,5 +44,6 @@ Instruktioner:
 10. Blanda sallad, örter och grönsaker i en stor bunke tillsammans med cirka tre fjärdedelar av dressingen.
 11. Torka av köttet och salta runt om. Grilla eller stek till önskad innertemperatur. Låt vila i 5–10 minuter innan du skär köttet i tunna skivor mot fibrerna.
 12. Bottna tallrikarna med salladen. Lägg över köttet och ringla över resterande dressing.
+
 
 #Asiatisk #Kött
