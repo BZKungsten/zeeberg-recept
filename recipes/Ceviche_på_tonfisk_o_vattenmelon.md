@@ -28,4 +28,4 @@ nymalen svartpeppar
 7. Mynta o chilin
 
 
-#Sallad #Tapas #Förrätt
+#Sallad #Tapas #Förrätt #Fisk
