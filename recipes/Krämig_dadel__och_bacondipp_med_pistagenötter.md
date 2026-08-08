@@ -21,4 +21,5 @@ Blanda grekisk yoghurt och citronjuice i en skål. Rör eller vispa tills smeten
 Montering
 Bred ut yoghurten i ett jämnt lager på ett serveringsfat eller i en vid, grund skål. Strö över det krispiga baconet, de karamelliserade dadlarna och de hackade pistagenötterna.
 
-#Tapas
+
+#Tapas #Tillbehör #Sås
