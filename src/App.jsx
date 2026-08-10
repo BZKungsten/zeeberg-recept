@@ -462,7 +462,7 @@ function App() {
   })
 
   return (
-    <div className="bg-slate-50 h-screen overflow-y-auto pb-28">
+    <div className="bg-slate-50 min-h-screen overflow-y-auto pb-28" style={{minHeight: '100dvh'}}>
       {/* Header - Receptfliken */}
       {activeTab === 'recipes' && (
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
