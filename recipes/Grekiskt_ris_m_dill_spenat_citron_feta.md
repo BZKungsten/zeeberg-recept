@@ -24,4 +24,5 @@ och vätskan absorberats.
 5. Dra av från värmen, rör ner dill och citronsaft och smaka av.
 6. Låt dra några minuter och toppa med feta och lite olivolja.
 
+
 #Vegetariskt
