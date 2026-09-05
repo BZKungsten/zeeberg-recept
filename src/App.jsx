@@ -525,16 +525,16 @@ function App() {
                 <div
                   key={recipe.id}
                   onClick={() => setSelectedRecipe(recipe)}
-                  className="bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 p-3 cursor-pointer hover:shadow-md transition-all"
+                  className="bg-white rounded-2xl border border-slate-100 shadow-sm flex items-start gap-4 p-4 cursor-pointer hover:shadow-md transition-all"
                 >
                   <img
                     src={recipe.image}
                     alt={recipe.name}
-                    className="w-20 h-20 object-cover rounded-xl shrink-0 bg-slate-100"
+                    className="w-28 h-28 object-cover rounded-xl shrink-0 bg-slate-100"
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
                   />
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-slate-900 text-base leading-snug">{recipe.name}</h3>
+                    <h3 className="font-bold text-slate-900 text-base leading-snug break-words">{recipe.name}</h3>
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {recipe.tags.map(tag => (
                         <span key={tag} className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTagColor(tag)}`}>
