@@ -181,7 +181,7 @@ function App() {
 
         return {
           id: file.id || index,
-          name: (file.title || file.id || '').replace(/\.md$/i, ''),
+          name: (file.title || file.id || '').replace(/\.md$/i, '').replace(/_/g, ' '),
           content: cleanContent.substring(0, 90) + (cleanContent.length > 90 ? '...' : ''),
           fullContent: file.content,
           tags: hashtags,
