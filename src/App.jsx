@@ -978,7 +978,7 @@ function App() {
               onChange={e => setCustomItemText(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAddCustomItem()}
               placeholder="Lägg till eget..."
-              className="flex-1 text-sm outline-none text-slate-700 placeholder-slate-400"
+              className="flex-1 text-[16px] outline-none text-slate-700 placeholder-slate-400"
             />
             <button
               onClick={handleAddCustomItem}
