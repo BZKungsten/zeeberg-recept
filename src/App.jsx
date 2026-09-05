@@ -520,64 +520,66 @@ function App() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-3">
               {filteredRecipes.map((recipe) => (
                 <div
                   key={recipe.id}
                   onClick={() => setSelectedRecipe(recipe)}
-                  className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all"
+                  className="bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 p-3 cursor-pointer hover:shadow-md transition-all"
                 >
-                  <div className="relative h-48 bg-slate-200">
-                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-contain bg-slate-100" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
-                    <div className="absolute bottom-2 right-2 flex gap-1.5 z-10">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          const imageMatch = recipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
-                          setEditTitle(recipe.name)
-                          const rawText1 = recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
-                          const parsed1 = parseRecipeContent(rawText1)
-                          setEditIngredients(parsed1.ingredients)
-                          setEditContent(parsed1.description)
-                          setEditTags([...recipe.tags])
-                          setEditImageUrl(imageMatch ? imageMatch[1] : null)
-                          setEditImageFile(null)
-                          setEditImagePreview(null)
-                          setEditCustomTag('')
-                          const allImgMatches1 = [...recipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
-                          setEditExtraImages(allImgMatches1.slice(1).map(m => m[1]))
-                          setEditExtraImageFiles([])
-                          setEditError(null)
-                          setEditSaving(false)
-                          setSelectedRecipe(recipe)
-                          setIsEditing(true)
-                        }}
-                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-slate-700"
-                      ><Pencil size={15} /></button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setSelectedRecipe(recipe); setConfirmDelete(true) }}
-                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-red-500"
-                      ><Trash2 size={15} /></button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          if (navigator.share) { navigator.share({ title: recipe.name, text: recipe.name }) }
-                          else { navigator.clipboard?.writeText(recipe.name) }
-                        }}
-                        className="p-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all text-slate-700"
-                      ><Share2 size={15} /></button>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-slate-900 text-lg mb-1">{recipe.name}</h3>
-                    <p className="text-xs text-slate-500 line-clamp-2 mb-3">{recipe.content}</p>
-                    <div className="flex flex-wrap gap-1">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.name}
+                    className="w-20 h-20 object-cover rounded-xl shrink-0 bg-slate-100"
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-slate-900 text-base leading-snug">{recipe.name}</h3>
+                    <div className="flex flex-wrap gap-1 mt-1.5">
                       {recipe.tags.map(tag => (
                         <span key={tag} className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTagColor(tag)}`}>
                           #{tag}
                         </span>
                       ))}
                     </div>
+                  </div>
+                  <div className="flex flex-col gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        const imageMatch = recipe.fullContent.match(/!\[.*?\]\((.*?)\)/)
+                        setEditTitle(recipe.name)
+                        const rawText1 = recipe.fullContent.replace(/!\[.*?\]\(.*?\)\n\n?/g, '').replace(/\s*\n\n(#[\wÅÄÖåäö]+ *)+$/, '').trim()
+                        const parsed1 = parseRecipeContent(rawText1)
+                        setEditIngredients(parsed1.ingredients)
+                        setEditContent(parsed1.description)
+                        setEditTags([...recipe.tags])
+                        setEditImageUrl(imageMatch ? imageMatch[1] : null)
+                        setEditImageFile(null)
+                        setEditImagePreview(null)
+                        setEditCustomTag('')
+                        const allImgMatches1 = [...recipe.fullContent.matchAll(/!\[.*?\]\((.*?)\)/g)]
+                        setEditExtraImages(allImgMatches1.slice(1).map(m => m[1]))
+                        setEditExtraImageFiles([])
+                        setEditError(null)
+                        setEditSaving(false)
+                        setSelectedRecipe(recipe)
+                        setIsEditing(true)
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    ><Pencil size={15} /></button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedRecipe(recipe); setConfirmDelete(true) }}
+                      className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    ><Trash2 size={15} /></button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (navigator.share) { navigator.share({ title: recipe.name, text: recipe.name }) }
+                        else { navigator.clipboard?.writeText(recipe.name) }
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    ><Share2 size={15} /></button>
                   </div>
                 </div>
               ))}
