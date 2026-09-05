@@ -530,7 +530,7 @@ function App() {
                   <img
                     src={recipe.image}
                     alt={recipe.name}
-                    className="w-28 h-28 object-cover rounded-xl shrink-0 bg-slate-100"
+                    className="w-36 h-36 object-cover rounded-xl shrink-0 bg-slate-100"
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
                   />
                   <div className="flex-1 min-w-0">
