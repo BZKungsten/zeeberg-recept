@@ -127,6 +127,7 @@ function App() {
   const [shoppingList, setShoppingList] = useState(() => {
     try { return JSON.parse(localStorage.getItem('shopping_list')) || [] } catch { return [] }
   })
+  const [customItemText, setCustomItemText] = useState('')
   const [ingredientChecks, setIngredientChecks] = useState({})
   const [cartAdded, setCartAdded] = useState(false)
   const [vault] = useState(() => {
@@ -425,6 +426,13 @@ function App() {
     } finally {
       setEditSaving(false)
     }
+  }
+
+  const handleAddCustomItem = () => {
+    const text = customItemText.trim()
+    if (!text) return
+    setShoppingList(prev => [...prev, { id: `${Date.now()}-${Math.random()}`, text, done: false, fromRecipe: 'Eget' }])
+    setCustomItemText('')
   }
 
   const handleAddToShoppingList = () => {
@@ -963,15 +971,32 @@ function App() {
                 className="text-sm text-[#6B8C6B] font-semibold">Rensa klara</button>
             )}
           </div>
+          <div className="bg-white rounded-2xl border border-slate-200 p-3 flex gap-2 mb-5">
+            <input
+              type="text"
+              value={customItemText}
+              onChange={e => setCustomItemText(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddCustomItem()}
+              placeholder="Lägg till eget..."
+              className="flex-1 text-sm outline-none text-slate-700 placeholder-slate-400"
+            />
+            <button
+              onClick={handleAddCustomItem}
+              disabled={!customItemText.trim()}
+              className="text-sm font-semibold text-[#6B8C6B] disabled:opacity-30"
+            >+ Lägg till</button>
+          </div>
           {shoppingList.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               <ShoppingCart size={48} className="mx-auto mb-4 opacity-30" />
               <p className="text-sm">Inga varor ännu</p>
-              <p className="text-xs mt-1">Gå till ett recept och tryck Lägg till</p>
+              <p className="text-xs mt-1">Gå till ett recept och tryck Lägg till, eller skriv ovan</p>
             </div>
           ) : (
             <>
-              {Array.from(new Set(shoppingList.map(i => i.fromRecipe))).map(recipe => (
+              {Array.from(new Set(shoppingList.map(i => i.fromRecipe)))
+                .sort((a, b) => a === 'Eget' ? -1 : b === 'Eget' ? 1 : 0)
+                .map(recipe => (
                 <div key={recipe} className="mb-5">
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">{recipe}</p>
                   <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
