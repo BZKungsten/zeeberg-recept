@@ -528,7 +528,7 @@ function App() {
                   className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all"
                 >
                   <div className="relative h-48 bg-slate-200">
-                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover object-center" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
+                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover object-top" onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }} />
                     <div className="absolute bottom-2 right-2 flex gap-1.5 z-10">
                       <button
                         onClick={(e) => {
@@ -773,7 +773,7 @@ function App() {
                 <div className="relative w-full rounded-2xl overflow-hidden">
                   <img
                     src={isEditing ? (editImagePreview || toDisplayUrl(editImageUrl)) : selectedRecipe.image}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-64 object-cover object-top"
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80' }}
                   />
                   {!isEditing && <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60 pointer-events-none" />}
