@@ -1,4 +1,5 @@
 ![Receptbild](../RecipeImages/1789882936068_hpyxc.jpg)
+![Extrabild](../RecipeImages/1789882981329_u9t12.jpg)
 
 ## Ingredienser
 smördeg: 700 g
@@ -24,5 +25,6 @@ Lägg degen i äggförpackning och smöra in innan laxen. Sen ta färskost och b
 Man ha i sparris jalapeno eller parmesan trevligt
 
 Sen sås/kräm av joghurten, peppar saltvrldlök persilja olivolja och vitlök.
+
 
 #Lax
