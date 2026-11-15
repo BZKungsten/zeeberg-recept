@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781691254318.jpg)
+![Receptbild](1781691254318.jpg)
 
 ## Ingredienser
 - 2 msk Misopasta

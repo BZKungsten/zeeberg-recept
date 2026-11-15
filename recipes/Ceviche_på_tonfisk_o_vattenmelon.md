@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1785042509396.jpg)
+![Receptbild](1785042509396.jpg)
 
 ## Ingredienser
 1 dl sushiris

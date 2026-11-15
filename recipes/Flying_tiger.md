@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781726242961.jpg)
+![Receptbild](1781726242961.jpg)
 
 ## Ingredienser
 Crying tiger Marinad till köttet:

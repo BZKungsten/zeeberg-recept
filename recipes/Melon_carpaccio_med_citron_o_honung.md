@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1785042126716.jpg)
+![Receptbild](1785042126716.jpg)
 
 1 citron
 olivolja

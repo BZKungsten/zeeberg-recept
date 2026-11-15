@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1782674349722.png)
+![Receptbild](1782674349722.png)
 
 
 recipediarywithalora Sticky Garlic Chicken & Veggie Stir-Fry

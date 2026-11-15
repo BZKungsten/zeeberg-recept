@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786030406387_ab0w6.jpg)
+![Receptbild](1786030406387_ab0w6.jpg)
 
 ## Ingredienser
 1 gul lök

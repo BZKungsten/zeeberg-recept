@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1783513184004.jpg)
+![Receptbild](1783513184004.jpg)
 
 Potatis
 Kapris

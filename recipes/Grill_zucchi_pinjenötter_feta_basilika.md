@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786254403256_cq9ui.jpg)
+![Receptbild](1786254403256_cq9ui.jpg)
 
 ## Ingredienser
 4 small zucchini

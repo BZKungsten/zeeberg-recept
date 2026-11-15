@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786230066826_kboya.jpg)
+![Receptbild](1786230066826_kboya.jpg)
 
 ## Ingredienser
 500 g ricotta

@@ -37,6 +37,10 @@ const toDisplayUrl = (url) => {
     const filename = url.slice(16)
     return GITHUB_CDN_BASE ? `${GITHUB_CDN_BASE}/RecipeImages/${filename}` : `/images/${filename}`
   }
+  // Nakna filnamn utan mapp ligger också i RecipeImages
+  if (!url.includes('/')) {
+    return GITHUB_CDN_BASE ? `${GITHUB_CDN_BASE}/RecipeImages/${url}` : `/images/${url}`
+  }
   return url
 }
 
@@ -120,6 +124,9 @@ function App() {
   const [editExtraImages, setEditExtraImages] = useState([])
   const [editExtraImageFiles, setEditExtraImageFiles] = useState([])
   const [lightboxImage, setLightboxImage] = useState(null)
+  const [photoChoice, setPhotoChoice] = useState(null)
+  const [textScan, setTextScan] = useState(null)
+  const [scanText, setScanText] = useState('')
   const [confirmDeleteCategory, setConfirmDeleteCategory] = useState(null)
   const [importUrl, setImportUrl] = useState('')
   const [importLoading, setImportLoading] = useState(false)
@@ -149,6 +156,26 @@ function App() {
     tags: [],
     newCustomTag: ''
   })
+
+  // Visa valmenyn: bilden kan bli receptbild eller läsas av som text
+  const openPhotoChoice = (file, mode, useAsImage) => {
+    setPhotoChoice({ src: URL.createObjectURL(file), mode, useAsImage })
+  }
+
+  // Lägg den inklistrade texten i slutet av valt fält
+  const appendScanText = () => {
+    const text = scanText.trim()
+    if (!text || !textScan) { setTextScan(null); setScanText(''); return }
+    const join = (prev) => prev.trim() ? `${prev.trimEnd()}\n${text}` : text
+    if (textScan.mode === 'edit') {
+      if (textScan.field === 'ingredients') setEditIngredients(join)
+      else setEditContent(join)
+    } else {
+      setFormData(prev => ({ ...prev, [textScan.field]: join(prev[textScan.field] || '') }))
+    }
+    setTextScan(null)
+    setScanText('')
+  }
 
   // Fetch recipes from server
   const fetchRecipes = async () => {
@@ -795,12 +822,14 @@ function App() {
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
                           const f = e.target.files[0]
                           if (!f) return
-                          setCrop(undefined); setCompletedCrop(null)
-                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
-                            setEditImageFile(file)
-                            setEditImagePreview(URL.createObjectURL(file))
-                            setCropState(null)
-                          }})
+                          openPhotoChoice(f, 'edit', () => {
+                            setCrop(undefined); setCompletedCrop(null)
+                            setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
+                              setEditImageFile(file)
+                              setEditImagePreview(URL.createObjectURL(file))
+                              setCropState(null)
+                            }})
+                          })
                         }} />
                       </label>
                       <button type="button" onClick={() => { setEditImageFile(null); setEditImagePreview(null); setEditImageUrl(null) }} className="absolute top-2 right-2 bg-white/80 rounded-full p-1.5"><X size={16} /></button>
@@ -814,12 +843,14 @@ function App() {
                   <input type="file" accept="image/*" className="hidden" onChange={e => {
                     const f = e.target.files[0]
                     if (!f) return
-                    setCrop(undefined); setCompletedCrop(null)
-                    setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
-                      setEditImageFile(file)
-                      setEditImagePreview(URL.createObjectURL(file))
-                      setCropState(null)
-                    }})
+                    openPhotoChoice(f, 'edit', () => {
+                      setCrop(undefined); setCompletedCrop(null)
+                      setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
+                        setEditImageFile(file)
+                        setEditImagePreview(URL.createObjectURL(file))
+                        setCropState(null)
+                      }})
+                    })
                   }} />
                 </label>
               ) : null}
@@ -860,11 +891,13 @@ function App() {
                         <span className="text-sm text-slate-500 font-medium">Lägg till bild</span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
                           const f = e.target.files[0]; if (!f) return
-                          setCrop(undefined); setCompletedCrop(null)
-                          setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
-                            setEditExtraImageFiles(prev => [...prev, { file, preview: URL.createObjectURL(file) }])
-                            setCropState(null)
-                          }})
+                          openPhotoChoice(f, 'edit', () => {
+                            setCrop(undefined); setCompletedCrop(null)
+                            setCropState({ src: URL.createObjectURL(f), originalName: f.name, originalFile: f, onConfirm: (file) => {
+                              setEditExtraImageFiles(prev => [...prev, { file, preview: URL.createObjectURL(file) }])
+                              setCropState(null)
+                            }})
+                          })
                         }} />
                       </label>
                     </div>
@@ -1089,12 +1122,14 @@ function App() {
                     <input type="file" accept="image/*" className="hidden" onChange={e => {
                       const file = e.target.files[0]
                       if (!file) return
-                      setCrop(undefined); setCompletedCrop(null)
-                      setCropState({ src: URL.createObjectURL(file), originalName: file.name, originalFile: file, onConfirm: (f) => {
-                        setImageFile(f)
-                        setImagePreview(URL.createObjectURL(f))
-                        setCropState(null)
-                      }})
+                      openPhotoChoice(file, 'form', () => {
+                        setCrop(undefined); setCompletedCrop(null)
+                        setCropState({ src: URL.createObjectURL(file), originalName: file.name, originalFile: file, onConfirm: (f) => {
+                          setImageFile(f)
+                          setImagePreview(URL.createObjectURL(f))
+                          setCropState(null)
+                        }})
+                      })
                     }} />
                   </label>
                 )}
@@ -1168,6 +1203,53 @@ function App() {
           </button>
         </div>
       </div>
+
+      {/* Vad ska bilden bli? */}
+      {photoChoice && (
+        <div className="fixed inset-0 bg-black/70 z-[65] flex items-end sm:items-center justify-center p-4" onClick={() => setPhotoChoice(null)}>
+          <div className="bg-white rounded-3xl w-full max-w-sm p-5 flex flex-col gap-2.5" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-1">
+              <img src={photoChoice.src} alt="" className="w-14 h-14 object-cover rounded-xl shrink-0" />
+              <h3 className="font-bold text-slate-900">Vad ska bilden bli?</h3>
+            </div>
+            <button type="button" onClick={() => { const use = photoChoice.useAsImage; setPhotoChoice(null); use() }}
+              className="w-full py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold">Använd som bild</button>
+            <button type="button" onClick={() => { setTextScan({ src: photoChoice.src, mode: photoChoice.mode, field: 'ingredients' }); setScanText(''); setPhotoChoice(null) }}
+              className="w-full py-3 border border-[#9ab89a] text-[#4d6b4d] rounded-2xl text-sm font-semibold">Text till Ingredienser</button>
+            <button type="button" onClick={() => { setTextScan({ src: photoChoice.src, mode: photoChoice.mode, field: 'content' }); setScanText(''); setPhotoChoice(null) }}
+              className="w-full py-3 border border-[#9ab89a] text-[#4d6b4d] rounded-2xl text-sm font-semibold">Text till Beskrivning</button>
+            <button type="button" onClick={() => setPhotoChoice(null)}
+              className="w-full py-3 text-sm font-semibold text-slate-500">Avbryt</button>
+          </div>
+        </div>
+      )}
+
+      {/* Läs av text från bilden med Live Text */}
+      {textScan && (
+        <div className="fixed inset-0 bg-black/80 z-[66] flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl overflow-hidden w-full max-w-lg flex flex-col max-h-[92vh]">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+              <h3 className="font-bold text-slate-900">Text till {textScan.field === 'ingredients' ? 'Ingredienser' : 'Beskrivning'}</h3>
+              <button onClick={() => { setTextScan(null); setScanText('') }} className="p-2 bg-slate-100 rounded-full"><X size={18} /></button>
+            </div>
+            <div className="flex-1 min-h-0 overflow-auto p-4 flex flex-col gap-3">
+              <img src={textScan.src} alt="" className="w-full rounded-2xl object-contain max-h-[40vh] bg-slate-100" />
+              <p className="text-xs text-slate-500">
+                Håll fingret på bilden, markera texten och välj Kopiera. Klistra sedan in den nedan.
+                På dator får du skriva av texten.
+              </p>
+              <textarea value={scanText} onChange={e => setScanText(e.target.value)} rows={6}
+                placeholder="Klistra in texten här..."
+                className="w-full p-4 text-sm text-slate-700 bg-slate-50 border border-[#9ab89a] rounded-2xl outline-none focus:ring-2 focus:ring-[#6B8C6B] resize-none" />
+            </div>
+            <div className="shrink-0 p-4 pt-0 flex gap-3">
+              <button onClick={() => { setTextScan(null); setScanText('') }} className="flex-1 py-3 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600">Avbryt</button>
+              <button onClick={appendScanText} disabled={!scanText.trim()}
+                className="flex-1 py-3 bg-[#6B8C6B] text-white rounded-2xl text-sm font-semibold disabled:opacity-40">Lägg till</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Crop Modal */}
       {cropState && (

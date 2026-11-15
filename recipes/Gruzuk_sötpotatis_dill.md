@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781590770499.jpeg)
+![Receptbild](1781590770499.jpeg)
 
 ## Ingredienser
 Sötpotatis

@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1784610348669.jpg)
+![Receptbild](1784610348669.jpg)
 
 ## Ingredienser
 vitkål : 1 st

@@ -11,9 +11,9 @@ const port = 3001;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-const recipesPath = path.join(process.cwd(), '..', '..', '01_ Knowledge_base', '02_Personal', 'Recipes');
-const imagesPath = path.join(process.cwd(), '..', '..', '01_ Knowledge_base', '02_Personal', 'RecipeImages');
-const hiddenTagsPath = path.join(process.cwd(), '..', '..', '01_ Knowledge_base', '02_Personal', 'hidden_tags.json');
+const recipesPath = path.join(process.cwd(), '..', '..', '01_Knowledge_base', '02_Personal', 'Recipes');
+const imagesPath = path.join(process.cwd(), '..', '..', '01_Knowledge_base', '02_Personal', 'RecipeImages');
+const hiddenTagsPath = path.join(process.cwd(), '..', '..', '01_Knowledge_base', '02_Personal', 'hidden_tags.json');
 
 // Skapa mapparna om de inte finns
 if (!fs.existsSync(recipesPath)) fs.mkdirSync(recipesPath, { recursive: true });

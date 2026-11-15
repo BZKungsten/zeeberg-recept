@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1785684233335_skmxa.jpg)
+![Receptbild](1785684233335_skmxa.jpg)
 
 ## Ingredienser
 4 skivor levainbröd eller annat osötat surdegsbröd

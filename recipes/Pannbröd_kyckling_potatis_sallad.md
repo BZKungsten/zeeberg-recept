@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1783534147998.jpg)
+![Receptbild](1783534147998.jpg)
 
 Pannbröd
 Nypotatis

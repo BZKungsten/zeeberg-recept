@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1784521686381.jpg)
+![Receptbild](1784521686381.jpg)
 
 •	4 skivor fullkornsbröd, rostat
 	•	2 mogna avokados, mosade

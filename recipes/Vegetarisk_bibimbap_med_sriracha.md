@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1785321943925.jpg)
+![Receptbild](1785321943925.jpg)
 
 4 personer
 

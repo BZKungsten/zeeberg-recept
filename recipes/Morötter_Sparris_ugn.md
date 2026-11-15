@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781590915797.jpeg)
+![Receptbild](1781590915797.jpeg)
 
 Morötter
 Sparris

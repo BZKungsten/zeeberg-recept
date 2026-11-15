@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1782589034815.jpg)
+![Receptbild](1782589034815.jpg)
 
 Halloumi
 Svamp

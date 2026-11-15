@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1783573402993.jpg)
+![Receptbild](1783573402993.jpg)
 
 Prosciutto
 Soltorkade tomater

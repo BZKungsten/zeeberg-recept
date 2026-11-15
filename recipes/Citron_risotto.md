@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786228576007_0d45c.jpg)
+![Receptbild](1786228576007_0d45c.jpg)
 
 ## Ingredienser
 1 stor bananschalottenlok (finhackad)

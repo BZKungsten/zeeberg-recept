@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781692624502.png)
+![Receptbild](1781692624502.png)
 
 Du behöver
 Kycklingsouvlaki

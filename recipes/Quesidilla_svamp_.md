@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781692864979.jpg)
+![Receptbild](1781692864979.jpg)
 
 .
 

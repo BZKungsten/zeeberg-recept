@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1782731872767.png)
+![Receptbild](1782731872767.png)
 
 DASH Sötpotatiscrostini med Avokado, Fetaost & Tomater
 

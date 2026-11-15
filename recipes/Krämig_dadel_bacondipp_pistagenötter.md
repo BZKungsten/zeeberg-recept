@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786229817553_gzt4j.jpg)
+![Receptbild](1786229817553_gzt4j.jpg)
 
 ## Ingredienser
 En nypa salt

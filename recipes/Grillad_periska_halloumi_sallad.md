@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1783573141381.jpg)
+![Receptbild](1783573141381.jpg)
 
 ## Ingredienser
 Grillad persika och halloumi

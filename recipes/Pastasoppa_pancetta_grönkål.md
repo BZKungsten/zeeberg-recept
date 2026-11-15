@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1781727033647.jpg)
+![Receptbild](1781727033647.jpg)
 
 PASTASOPPA MED PANCETTA OCH GRÖNKÅL
 4 PORTIONER / UNDER 45 MIN

@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1783329746247.jpg)
+![Receptbild](1783329746247.jpg)
 
 Nyfriterade arancini av matgröt – ett bra sätt att använda upp rester. Serveras med en pepprig krassemajonnäs, gärna tillsammans med en enkel fänkålssallad.
 

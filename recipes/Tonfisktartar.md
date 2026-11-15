@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786229012323_sl9pb.jpg)
+![Receptbild](1786229012323_sl9pb.jpg)
 
 ## Ingredienser
 Stora kapris för garnityr

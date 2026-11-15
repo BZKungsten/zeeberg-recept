@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1786254197438_uceky.jpg)
+![Receptbild](1786254197438_uceky.jpg)
 
 ## Ingredienser
 1 large head fennel, trimmed, tops reserved

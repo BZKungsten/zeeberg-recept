@@ -1,4 +1,4 @@
-![Receptbild](../RecipeImages/1785684440267_hdsvk.jpg)
+![Receptbild](1785684440267_hdsvk.jpg)
 
 .
 Recept på min hälsosamma romsås som räcker till
