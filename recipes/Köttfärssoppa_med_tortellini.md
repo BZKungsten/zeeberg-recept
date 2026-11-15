@@ -1,5 +1,10 @@
-![Receptbild](https://images.recept.se/images/recipes/kottfarssoppa-med-tortellini_2274.jpg?fit=crop&crop=focalpoint&auto=format&fp-x=0.48165177621624&fp-y=0.52652229654779&fp-z=1.0487355172387&w=1200&h=1200)
+![Receptbild](../RecipeImages/1790108126322_7myre.jpg)
+![Extrabild](../RecipeImages/1790108231430_a44bh.jpg)
 
+## Ingredienser
+https://recept.se/recept/kottfarssoppa-med-tortellini
+
+## Beskrivning
 Snabblagad soppa med köttfärs, passerade tomater, kalvbuljong, spenat och färsk tortellini. Servera soppan rykande varm med bröd.
 
 Tillagning: 30 min | Total: 30 min
@@ -28,4 +33,7 @@ Instruktioner:
 4. Koka tortellinin enligt anvisningar på paketet. Häll bort kokvattnet och blanda försiktigt ner tortellinin i soppan.
 5. Servera soppan rykande varm med bröd.
 
-#Soppa #Pasta
+[Källa: https://recept.se/recept/kottfarssoppa-med-tortellini]
+
+
+#Soppa
