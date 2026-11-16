@@ -2,6 +2,12 @@
 
 ## Ingredienser
 .
+• 3 dl glutenfria havregryn
+• 250 g keso (1 liten burk)
+• 2 ägg
+• 1 tsk bakpulver
+• 0,5 tsk salt
+• Topping: Pumpa- & solroskärnor
 
 ## Beskrivning
 .
