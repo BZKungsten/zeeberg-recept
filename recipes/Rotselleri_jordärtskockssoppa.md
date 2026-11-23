@@ -1,5 +1,6 @@
 ![Receptbild](1784449485707.jpg)
 
+## Ingredienser
 ROTSELLERI- OCH JORDÄRTSKOCKSSOPPA MED SVAMP OCH PEPPARROT
 4 PORTIONER / UNDER 45 MIN
 INGREDIENSER
@@ -23,4 +24,6 @@ GÖR SÅ HÄR
 5. Tillsätt hälften av crème fraichen i soppan och mixa slätt med stavmixer. Smaka av med salt och peppar.
 6. Servera soppan toppad med svampfräset, resten av crème fraichen, gräslöken och pepparroten.
 
-#Soppa #Vegetariskt
+
+
+#Soppa #Vegetariskt #Lagat
