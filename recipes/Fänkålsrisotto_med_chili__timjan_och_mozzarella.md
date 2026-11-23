@@ -41,4 +41,4 @@ Instruktioner:
 9. Lägg upp risotton, strö över mozzarella, timjan, chiliflakes och ringla över resterande 2 msk olja.
 
 
-#Vegetariskt
+#Vegetariskt #Lagat
