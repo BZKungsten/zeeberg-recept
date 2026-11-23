@@ -24,4 +24,4 @@ Stek lövbiffen i smör i het panna i omgångar. Lägg över i grytan.
 Rör ner vatten, buljong, grädde, creme fraiche, färskost, soja, senap och resterande ingredienser och låt allt småputtra i 5 minuter. Smaka av med ev mer alt och peppar.
 
 
-#Pasta #Kött
+#Pasta #Kött #Lagat
