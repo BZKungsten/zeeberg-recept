@@ -65,4 +65,4 @@ Servera den grillade laxen tillsammans med mangosalladen.
 [Källa: https://www.mathem.se/se/recipes/1120-mari-bergman-asiatisk-grillad-lax-med-mangosallad/] #Sallad
 
 
-#Sallad
+#Sallad #Lagat
