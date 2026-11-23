@@ -1,5 +1,6 @@
 ![Receptbild](1784446958620.jpg)
 
+## Ingredienser
 TOMATSOPPA MED BÖNOR, FÄNKÅL OCH DILLMAJONNÄS
 4 PORTIONER / UNDER 45 MIN
 INGREDIENSER
@@ -25,4 +26,6 @@ GÖR SÅ HÄR
 3. Dillmajonnäs: Finhacka dillen och riv vitlöken. Mixa dill, vitlök och majonnäs med stavmixer. Smaka av med salt och peppar.
 4. Toppa soppan med dillmajonnäsen och servera gärna med parmesankrutonger.
 
-#Soppa #Vegetariskt
+
+
+#Soppa #Vegetariskt #Lagat
